@@ -94,4 +94,96 @@ Metode klasifikasi persediaan berdasarkan nilai penyerapan modal atau nilai pema
 - **Views**: `resources/views/`
   - Menggunakan UI berbasis **Bootstrap 5**.
 - **Migrations & Seeders**: `database/migrations/` dan `database/seeders/DatabaseSeeder.php`
-  - Berisi struktur tabel dan 20 data dummy (sampel) lengkap beserta parameter EOQ dan 12 bulan data permintaannya.
+
+---
+
+## 🗄️ Detail Database Schema & Relasi (Untuk Class Diagram)
+
+Berikut adalah rincian tabel, atribut, dan relasi antar tabel (models) pada sistem Logistik Farmasi ini. Struktur ini dapat digunakan sebagai acuan pembuatan Class Diagram atau ERD (Entity Relationship Diagram).
+
+### 1. Tabel `users`
+Menyimpan data pengguna aplikasi (Apoteker & Admin).
+- **Atribut:**
+  - `id` (PK, BigInt)
+  - `name` (String)
+  - `email` (String, Unique)
+  - `password` (String)
+  - `role` (Enum: 'admin', 'apoteker')
+  - `created_at`, `updated_at` (Timestamp)
+- **Relasi:** Tidak memiliki relasi langsung dengan tabel transaksi, murni untuk autentikasi dan otorisasi.
+
+### 2. Tabel `medicines`
+Menyimpan data master/katalog obat.
+- **Atribut:**
+  - `id` (PK, BigInt)
+  - `kode_obat` (String, Unique)
+  - `nama_obat` (String)
+  - `satuan` (String) - *Contoh: Box, Botol, Strip*
+  - `kategori` (String)
+  - `harga_per_unit` (Decimal)
+  - `stok_aktual` (Integer)
+  - `created_at`, `updated_at` (Timestamp)
+- **Relasi:**
+  - `hasMany` ke `demand_data` (Satu obat memiliki banyak data historis permintaan).
+  - `hasMany` ke `eoq_parameters` (Satu obat bisa memiliki banyak riwayat input parameter EOQ).
+  - `hasMany` ke `eoq_calculations` (Satu obat memiliki banyak riwayat perhitungan EOQ).
+  - `hasMany` ke `orders` (Satu obat memiliki banyak riwayat pemesanan).
+
+### 3. Tabel `demand_data`
+Menyimpan data riwayat permintaan/pemakaian obat bulanan (digunakan untuk meramalkan/menghitung rata-rata permintaan).
+- **Atribut:**
+  - `id` (PK, BigInt)
+  - `medicine_id` (FK, BigInt) - *Merujuk ke `medicines.id`*
+  - `periode` (String) - *Contoh: '2023-01' atau 'Januari 2023'*
+  - `jumlah_permintaan` (Integer)
+  - `created_at`, `updated_at` (Timestamp)
+- **Relasi:**
+  - `belongsTo` ke `medicines` (Data permintaan ini milik satu obat tertentu).
+
+### 4. Tabel `eoq_parameters`
+Menyimpan variabel/parameter masukan yang dibutuhkan untuk menghitung EOQ dan Min-Max Stock sebuah obat.
+- **Atribut:**
+  - `id` (PK, BigInt)
+  - `medicine_id` (FK, BigInt) - *Merujuk ke `medicines.id`*
+  - `rata_rata_permintaan` (Decimal) - *Nilai D (Demand)*
+  - `biaya_pesan` (Decimal) - *Nilai S (Ordering Cost)*
+  - `biaya_simpan` (Decimal) - *Nilai H (Holding Cost)*
+  - `faktor_biaya_simpan` (Decimal) - *Nilai % jika H dihitung dari Harga * Faktor*
+  - `lead_time` (Integer) - *Nilai LT (Waktu tunggu dalam hari)*
+  - `service_level_z` (Decimal) - *Nilai Z (Contoh 1.65 untuk 95%)*
+  - `created_at`, `updated_at` (Timestamp)
+- **Relasi:**
+  - `belongsTo` ke `medicines`.
+  - `hasMany` ke `eoq_calculations` (Satu parameter bisa menghasilkan satu/lebih riwayat kalkulasi).
+
+### 5. Tabel `eoq_calculations`
+Menyimpan hasil perhitungan sistem dari metode EOQ dan Min-Max.
+- **Atribut:**
+  - `id` (PK, BigInt)
+  - `medicine_id` (FK, BigInt) - *Merujuk ke `medicines.id`*
+  - `eoq_parameter_id` (FK, BigInt) - *Merujuk ke `eoq_parameters.id`*
+  - `eoq_value` (Decimal) - *Hasil optimal pemesanan (EOQ)*
+  - `frekuensi_pesan` (Decimal) - *Frekuensi pesan dalam setahun (F)*
+  - `total_cost` (Decimal) - *Total Biaya Persediaan (TC)*
+  - `safety_stock` (Decimal) - *Stok Pengaman (SS)*
+  - `reorder_point` (Decimal) - *Titik pemesanan kembali (ROP)*
+  - `stok_minimum` (Decimal) - *Batas bawah stok*
+  - `stok_maksimum` (Decimal) - *Batas atas stok*
+  - `status` (String) - *Indikator saat kalkulasi (Aman / Perlu Pesan / Overstock)*
+  - `created_at`, `updated_at` (Timestamp)
+- **Relasi:**
+  - `belongsTo` ke `medicines`.
+  - `belongsTo` ke `eoq_parameters`.
+
+### 6. Tabel `orders`
+Menyimpan data riwayat pemesanan obat ke supplier (restock).
+- **Atribut:**
+  - `id` (PK, BigInt)
+  - `medicine_id` (FK, BigInt) - *Merujuk ke `medicines.id`*
+  - `tanggal_pesan` (Date)
+  - `jumlah_pesan` (Integer)
+  - `status` (String) - *Contoh: 'pending', 'selesai'*
+  - `keterangan` (Text, Nullable)
+  - `created_at`, `updated_at` (Timestamp)
+- **Relasi:**
+  - `belongsTo` ke `medicines`.
