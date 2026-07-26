@@ -3,88 +3,104 @@
 @section('title', 'Analisis ABC')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Analisis ABC</li>
+    <span>/</span>
+    <span class="text-[#04aabe] font-semibold">Analisis Kategori ABC</span>
 @endsection
 
 @section('content')
-<div class="page-header">
-    <h4><i class="bi bi-pie-chart text-primary me-2"></i>Fase 3 — Analisis ABC</h4>
-    <p class="text-muted mb-0" style="font-size: 0.85rem;">Klasifikasi obat berdasarkan nilai pakai (jumlah × harga)</p>
-</div>
-
-<!-- Summary Cards -->
-<div class="row g-3 mb-4">
-    @foreach($summary as $kat => $data)
-        <div class="col-md-4">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <span class="badge badge-kategori-{{ strtolower($kat) }} fs-6 px-3">Kategori {{ $kat }}</span>
-                        <span class="fw-bold fs-4">{{ $data['count'] }}</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 6px;">
-                        <div class="progress-bar badge-kategori-{{ strtolower($kat) }}" style="width: {{ $data['percentage'] }}%"></div>
-                    </div>
-                    <small class="text-muted">{{ $data['percentage'] }}% total item — {{ $data['description'] }}</small>
-                </div>
-            </div>
-        </div>
-    @endforeach
-</div>
-
-<div class="row g-3">
-    <!-- Chart -->
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">Distribusi ABC</div>
-            <div class="card-body">
-                <canvas id="abcChart" height="300"></canvas>
-            </div>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-[#04aabe]"></i>
+                <span>Analisis Klasifikasi ABC</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Pengelompokan persediaan obat berdasarkan tingkat investasi dan nilai pemakaian tahunan</p>
         </div>
     </div>
 
-    <!-- Table -->
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">Detail Klasifikasi ABC</div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover table-sm mb-0">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Obat</th>
-                                <th class="text-end">Total Permintaan</th>
-                                <th class="text-end">Harga/Unit</th>
-                                <th class="text-end">Nilai Pakai</th>
-                                <th class="text-end">%</th>
-                                <th class="text-end">Kumulatif</th>
-                                <th class="text-center">Kategori</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($analysisData as $i => $item)
-                                <tr>
-                                    <td>{{ $i + 1 }}</td>
-                                    <td class="fw-semibold">{{ $item['medicine']->nama_obat }}</td>
-                                    <td class="text-end">{{ number_format($item['total_permintaan']) }}</td>
-                                    <td class="text-end">Rp {{ number_format($item['harga_per_unit'], 0, ',', '.') }}</td>
-                                    <td class="text-end fw-bold">Rp {{ number_format($item['nilai_pakai'], 0, ',', '.') }}</td>
-                                    <td class="text-end">{{ $item['persentase'] }}%</td>
-                                    <td class="text-end">{{ $item['kumulatif'] }}%</td>
-                                    <td class="text-center">
-                                        <span class="badge badge-kategori-{{ strtolower($item['kategori_abc']) }}">{{ $item['kategori_abc'] }}</span>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center text-muted py-3">Belum ada data untuk analisis</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        @foreach($summary as $kat => $data)
+            <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 text-xs font-black rounded-lg uppercase tracking-wider
+                        {{ $kat === 'A' ? 'bg-rose-50 text-rose-700 border border-rose-200' : ($kat === 'B' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-brand-50 text-[#04aabe] border border-cyan-200') }}">
+                        Kategori {{ $kat }}
+                    </span>
+                    <span class="text-2xl font-black text-slate-800">{{ $data['count'] }} Obat</span>
                 </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div class="h-full {{ $kat === 'A' ? 'bg-rose-500' : ($kat === 'B' ? 'bg-amber-500' : 'bg-[#04aabe]') }}" style="width: {{ $data['percentage'] }}%"></div>
+                </div>
+                <p class="text-[11px] text-slate-500 font-medium">
+                    <span class="font-bold text-slate-700">{{ $data['percentage'] }}% Total Item</span> — {{ $data['description'] }}
+                </p>
+            </div>
+        @endforeach
+    </div>
+
+    <!-- Chart & Table Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Chart -->
+        <div class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+            <div>
+                <h3 class="text-base font-bold text-slate-800 mb-1">Distribusi Kategori ABC</h3>
+                <p class="text-xs text-slate-400">Proporsi item obat per kelompok investasi</p>
+            </div>
+            <div class="py-6 flex items-center justify-center">
+                <div class="w-60 h-60">
+                    <canvas id="abcChart"></canvas>
+                </div>
+            </div>
+            <div class="text-[11px] text-slate-400 text-center font-medium">
+                Kategori A membutuhkan perhatian paling ketat dalam perencanaan stok.
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100">
+                <h3 class="text-base font-bold text-slate-800">Rincian Klasifikasi Item Obat</h3>
+                <p class="text-xs text-slate-500 mt-1">Urutan obat berdasarkan investasi nilai pemakaian</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                            <th class="py-3.5 px-5">No</th>
+                            <th class="py-3.5 px-5">Nama Obat</th>
+                            <th class="py-3.5 px-5 text-right">Permintaan</th>
+                            <th class="py-3.5 px-5 text-right">Harga Unit</th>
+                            <th class="py-3.5 px-5 text-right font-bold">Nilai Pemakaian</th>
+                            <th class="py-3.5 px-5 text-right">% Kontribusi</th>
+                            <th class="py-3.5 px-5 text-center">Kategori</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+                        @forelse($analysisData as $i => $item)
+                            <tr class="hover:bg-slate-50/80 transition-all">
+                                <td class="py-3.5 px-5 text-slate-400 font-bold">{{ $i + 1 }}</td>
+                                <td class="py-3.5 px-5 font-bold text-slate-800">{{ $item['medicine']->nama_obat }}</td>
+                                <td class="py-3.5 px-5 text-right font-semibold text-slate-700">{{ number_format($item['total_permintaan']) }}</td>
+                                <td class="py-3.5 px-5 text-right font-semibold text-slate-700">Rp {{ number_format($item['harga_per_unit'], 0, ',', '.') }}</td>
+                                <td class="py-3.5 px-5 text-right font-black text-slate-900">Rp {{ number_format($item['nilai_pakai'], 0, ',', '.') }}</td>
+                                <td class="py-3.5 px-5 text-right font-bold text-[#04aabe]">{{ $item['persentase'] }}%</td>
+                                <td class="py-3.5 px-5 text-center">
+                                    <span class="px-2.5 py-1 text-[10px] font-black rounded-lg uppercase tracking-wider
+                                        {{ $item['kategori_abc'] === 'A' ? 'bg-rose-50 text-rose-700 border border-rose-200' : ($item['kategori_abc'] === 'B' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-brand-50 text-[#04aabe] border border-cyan-200') }}">
+                                        Kategori {{ $item['kategori_abc'] }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="py-8 text-center text-slate-400">Belum ada data untuk analisis.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -100,20 +116,21 @@
             labels: ['Kategori A', 'Kategori B', 'Kategori C'],
             datasets: [{
                 data: [{{ $summary['A']['count'] }}, {{ $summary['B']['count'] }}, {{ $summary['C']['count'] }}],
-                backgroundColor: ['#dc2626', '#d97706', '#059669'],
+                backgroundColor: ['#f43f5e', '#f59e0b', '#04aabe'],
                 borderWidth: 0,
                 hoverOffset: 10,
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { font: { size: 12 }, padding: 15 }
+                    labels: { font: { size: 11 } }
                 }
             },
-            cutout: '60%',
+            cutout: '65%',
         }
     });
 </script>

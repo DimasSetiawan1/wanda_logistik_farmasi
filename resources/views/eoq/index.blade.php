@@ -3,171 +3,154 @@
 @section('title', 'Parameter EOQ')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Parameter EOQ</li>
+    <span>/</span>
+    <span class="text-[#04aabe] font-semibold">Parameter EOQ</span>
 @endsection
 
 @section('content')
-<div class="page-header">
-    <h4><i class="bi bi-calculator text-primary me-2"></i>Fase 1 — Perhitungan EOQ</h4>
-    <p class="text-muted mb-0" style="font-size: 0.85rem;">Economic Order Quantity — Kuantitas Pemesanan Optimal</p>
-</div>
-
-<div class="row g-4">
-    <!-- Form Input Parameter -->
-    <div class="col-lg-5">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <i class="bi bi-sliders me-2"></i>Input Parameter EOQ
-            </div>
-            <div class="card-body">
-                @if($errors->any())
-                    <div class="alert alert-danger py-2">
-                        <ul class="mb-0 small">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('eoq.calculate') }}">
-                    @csrf
-                    <div class="mb-3">
-                        <label class="form-label">Pilih Obat</label>
-                        <select name="medicine_id" class="form-select" id="medicineSelect" required>
-                            <option value="">Pilih obat...</option>
-                            @foreach($medicines as $m)
-                                <option value="{{ $m->id }}"
-                                    data-d="{{ $m->latestEoqParameter->rata_rata_permintaan ?? '' }}"
-                                    data-s="{{ $m->latestEoqParameter->biaya_pesan ?? '' }}"
-                                    data-h="{{ $m->latestEoqParameter->biaya_simpan ?? '' }}"
-                                    data-i="{{ $m->latestEoqParameter->faktor_biaya_simpan ?? '0.1' }}"
-                                    data-lt="{{ $m->latestEoqParameter->lead_time ?? '' }}"
-                                    data-z="{{ $m->latestEoqParameter->service_level_z ?? '1.65' }}"
-                                    {{ old('medicine_id') == $m->id ? 'selected' : '' }}>
-                                    {{ $m->kode_obat }} — {{ $m->nama_obat }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="p-3 bg-light rounded mb-3">
-                        <small class="fw-bold text-muted">DATA PERMINTAAN</small>
-                        <div class="mt-2">
-                            <label class="form-label">Rata-rata Permintaan per Tahun (D)</label>
-                            <input type="number" name="rata_rata_permintaan" id="inputD" class="form-control" value="{{ old('rata_rata_permintaan') }}" step="0.01" min="0" required>
-                        </div>
-                    </div>
-
-                    <div class="p-3 bg-light rounded mb-3">
-                        <small class="fw-bold text-muted">BIAYA PERSEDIAAN</small>
-                        <div class="row g-2 mt-1">
-                            <div class="col-6">
-                                <label class="form-label">Biaya Pesan (S)</label>
-                                <input type="number" name="biaya_pesan" id="inputS" class="form-control" value="{{ old('biaya_pesan') }}" step="0.01" min="0" required>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label">Biaya Simpan (H)</label>
-                                <input type="number" name="biaya_simpan" id="inputH" class="form-control" value="{{ old('biaya_simpan') }}" step="0.01" min="0" required>
-                            </div>
-                        </div>
-                        <div class="mt-2">
-                            <label class="form-label">Faktor Biaya Simpan (I)</label>
-                            <input type="number" name="faktor_biaya_simpan" id="inputI" class="form-control" value="{{ old('faktor_biaya_simpan', '0.1') }}" step="0.0001" min="0" max="1">
-                        </div>
-                    </div>
-
-                    <div class="p-3 bg-light rounded mb-3">
-                        <small class="fw-bold text-muted">PARAMETER MIN-MAX</small>
-                        <div class="row g-2 mt-1">
-                            <div class="col-6">
-                                <label class="form-label">Lead Time (hari)</label>
-                                <input type="number" name="lead_time" id="inputLT" class="form-control" value="{{ old('lead_time') }}" min="1" required>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label">Service Level (Z)</label>
-                                <input type="number" name="service_level_z" id="inputZ" class="form-control" value="{{ old('service_level_z', '1.65') }}" step="0.01" min="0">
-                                <small class="text-muted">1.65 = 95%</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-calculator me-1"></i> Hitung EOQ & Min-Max
-                    </button>
-                </form>
-
-                <hr>
-                <form method="POST" action="{{ route('eoq.calculateAll') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-success w-100" onclick="return confirm('Hitung EOQ untuk semua obat yang memiliki parameter?')">
-                        <i class="bi bi-arrow-repeat me-1"></i> Hitung Ulang Semua Obat
-                    </button>
-                </form>
-            </div>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-[#04aabe]"></i>
+                <span>Perhitungan & Parameter EOQ</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Kuantitas Pemesanan Optimal untuk Efisiensi Biaya Persediaan Obat</p>
         </div>
     </div>
 
-    <!-- Info Rumus -->
-    <div class="col-lg-7">
-        <div class="card mb-3">
-            <div class="card-header">
-                <i class="bi bi-info-circle me-2"></i>Rumus EOQ
-            </div>
-            <div class="card-body">
-                <div class="p-3 bg-primary bg-opacity-10 rounded mb-3">
-                    <h6 class="fw-bold text-primary">Formula EOQ</h6>
-                    <p class="mb-1" style="font-size: 1.1rem; font-family: monospace;">EOQ* = √(2 × D × S / H)</p>
-                    <small class="text-muted">D = Permintaan per tahun, S = Biaya pesan, H = Biaya simpan</small>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Input Form Parameter -->
+        <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <h3 class="text-base font-bold text-slate-800 mb-4 pb-3 border-b border-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square text-[#04aabe]"></i>
+                <span>Input Parameter Obat</span>
+            </h3>
+
+            @if($errors->any())
+                <div class="mb-4 bg-rose-50 border border-rose-200 text-rose-700 p-3 rounded-xl text-xs">
+                    <ul class="list-disc pl-4 space-y-0.5">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-                <div class="p-3 bg-success bg-opacity-10 rounded mb-3">
-                    <h6 class="fw-bold text-success">Frekuensi & Biaya Total</h6>
-                    <p class="mb-1" style="font-family: monospace;">F = D / EOQ*</p>
-                    <p class="mb-1" style="font-family: monospace;">TC = (D/EOQ* × S) + (EOQ*/2 × H) + (D × P)</p>
+            @endif
+
+            <form method="POST" action="{{ route('eoq.calculate') }}" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Pilih Obat</label>
+                    <select name="medicine_id" id="medicineSelect" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#04aabe] font-medium text-slate-800" required>
+                        <option value="">-- Pilih Obat --</option>
+                        @foreach($medicines as $m)
+                            <option value="{{ $m->id }}"
+                                data-d="{{ $m->latestEoqParameter->rata_rata_permintaan ?? '' }}"
+                                data-s="{{ $m->latestEoqParameter->biaya_pesan ?? '' }}"
+                                data-h="{{ $m->latestEoqParameter->biaya_simpan ?? '' }}"
+                                data-i="{{ $m->latestEoqParameter->faktor_biaya_simpan ?? '0.1' }}"
+                                data-lt="{{ $m->latestEoqParameter->lead_time ?? '' }}"
+                                data-z="{{ $m->latestEoqParameter->service_level_z ?? '1.65' }}"
+                                {{ old('medicine_id') == $m->id ? 'selected' : '' }}>
+                                {{ $m->kode_obat }} — {{ $m->nama_obat }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="p-3 bg-warning bg-opacity-10 rounded">
-                    <h6 class="fw-bold text-warning">Min-Max Stock</h6>
-                    <p class="mb-1" style="font-family: monospace;">SS = Z × d × √LT</p>
-                    <p class="mb-1" style="font-family: monospace;">ROP = (d × LT) + SS</p>
-                    <p class="mb-1" style="font-family: monospace;">Min = SS + (d × LT)</p>
-                    <p class="mb-0" style="font-family: monospace;">Max = Min + EOQ*</p>
+
+                <div class="p-4 bg-slate-50 rounded-xl space-y-3 border border-slate-100">
+                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider block">Data Permintaan</span>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Permintaan Tahunan (Unit)</label>
+                        <input type="number" name="rata_rata_permintaan" id="inputD" value="{{ old('rata_rata_permintaan') }}" step="0.01" min="0" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg font-bold text-slate-800" required>
+                    </div>
                 </div>
+
+                <div class="p-4 bg-slate-50 rounded-xl space-y-3 border border-slate-100">
+                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider block">Biaya Persediaan</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Biaya Pemesanan (Rp)</label>
+                            <input type="number" name="biaya_pesan" id="inputS" value="{{ old('biaya_pesan') }}" step="0.01" min="0" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg font-bold text-slate-800" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Biaya Penyimpanan (Rp)</label>
+                            <input type="number" name="biaya_simpan" id="inputH" value="{{ old('biaya_simpan') }}" step="0.01" min="0" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg font-bold text-slate-800" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Faktor Biaya Simpan (%)</label>
+                        <input type="number" name="faktor_biaya_simpan" id="inputI" value="{{ old('faktor_biaya_simpan', '0.1') }}" step="0.0001" min="0" max="1" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg font-semibold text-slate-800">
+                    </div>
+                </div>
+
+                <div class="p-4 bg-slate-50 rounded-xl space-y-3 border border-slate-100">
+                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider block">Parameter Waktu & Toleransi</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Waktu Tunggu / Lead Time (Hari)</label>
+                            <input type="number" name="lead_time" id="inputLT" value="{{ old('lead_time') }}" min="1" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg font-bold text-slate-800" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tingkat Layanan / Service Level</label>
+                            <input type="number" name="service_level_z" id="inputZ" value="{{ old('service_level_z', '1.65') }}" step="0.01" min="0" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg font-bold text-slate-800">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-[#04aabe] hover:bg-[#03899c] text-white font-bold rounded-xl shadow-lg shadow-[#04aabe]/30 text-xs flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>Hitung EOQ & Min-Max Stock</span>
+                </button>
+            </form>
+
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                <form method="POST" action="{{ route('eoq.calculateAll') }}">
+                    @csrf
+                    <button type="submit" onclick="return confirm('Proses hitung ulang seluruh obat?')" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>Hitung Ulang Semua Obat</span>
+                    </button>
+                </form>
             </div>
         </div>
 
-        <!-- Daftar Obat dengan Parameter -->
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-list-check me-2"></i>Obat dengan Parameter EOQ
+        <!-- Table List Obat dengan Parameter -->
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-slate-100">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-[#04aabe]"></i>
+                    <span>Daftar Parameter Terpasang</span>
+                </h3>
+                <p class="text-xs text-slate-500 mt-1">Status variabel pesanan yang telah dikonfigurasi untuk setiap jenis obat</p>
             </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Obat</th>
-                                <th class="text-end">D</th>
-                                <th class="text-end">S</th>
-                                <th class="text-end">H</th>
-                                <th class="text-end">LT</th>
+
+            <div class="flex-1 overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                            <th class="py-3 px-5">Nama Obat</th>
+                            <th class="py-3 px-5 text-right">Permintaan (D)</th>
+                            <th class="py-3 px-5 text-right">Biaya Pesan (S)</th>
+                            <th class="py-3 px-5 text-right">Biaya Simpan (H)</th>
+                            <th class="py-3 px-5 text-right">Lead Time</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+                        @foreach($medicines as $m)
+                            @if($m->latestEoqParameter)
+                            <tr class="hover:bg-slate-50/80 transition-all">
+                                <td class="py-3.5 px-5 font-bold text-slate-800">{{ $m->nama_obat }}</td>
+                                <td class="py-3.5 px-5 text-right font-semibold text-slate-700">{{ number_format($m->latestEoqParameter->rata_rata_permintaan, 0) }}</td>
+                                <td class="py-3.5 px-5 text-right font-semibold text-slate-700">Rp {{ number_format($m->latestEoqParameter->biaya_pesan, 0) }}</td>
+                                <td class="py-3.5 px-5 text-right font-semibold text-slate-700">Rp {{ number_format($m->latestEoqParameter->biaya_simpan, 0) }}</td>
+                                <td class="py-3.5 px-5 text-right font-bold text-[#04aabe]">{{ $m->latestEoqParameter->lead_time }} Hari</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($medicines as $m)
-                                @if($m->latestEoqParameter)
-                                <tr>
-                                    <td>{{ $m->nama_obat }}</td>
-                                    <td class="text-end">{{ number_format($m->latestEoqParameter->rata_rata_permintaan, 0) }}</td>
-                                    <td class="text-end">{{ number_format($m->latestEoqParameter->biaya_pesan, 0) }}</td>
-                                    <td class="text-end">{{ number_format($m->latestEoqParameter->biaya_simpan, 0) }}</td>
-                                    <td class="text-end">{{ $m->latestEoqParameter->lead_time }} hari</td>
-                                </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                            @endif
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -38,13 +38,20 @@ class MedicineController extends Controller
         $request->validate([
             'kode_obat' => 'required|string|unique:medicines,kode_obat',
             'nama_obat' => 'required|string|max:255',
+            'kategori_obat' => 'required|string|max:255',
             'satuan' => 'required|string|max:50',
-            'kategori' => 'required|in:A,B,C',
-            'harga_per_unit' => 'required|numeric|min:0',
-            'stok_aktual' => 'required|integer|min:0',
+            'tingkat_pemakaian' => 'required|in:Sangat Sering,Sering,Jarang',
+            'kategori' => 'nullable|in:A,B,C',
+            'harga_per_unit' => 'nullable|numeric|min:0',
+            'stok_aktual' => 'nullable|integer|min:0',
         ]);
 
-        Medicine::create($request->all());
+        $data = $request->all();
+        $data['kategori'] = $data['kategori'] ?? 'C';
+        $data['harga_per_unit'] = $data['harga_per_unit'] ?? 0;
+        $data['stok_aktual'] = $data['stok_aktual'] ?? 0;
+
+        Medicine::create($data);
 
         return redirect()->route('medicines.index')
             ->with('success', 'Data obat berhasil ditambahkan.');
@@ -60,13 +67,20 @@ class MedicineController extends Controller
         $request->validate([
             'kode_obat' => 'required|string|unique:medicines,kode_obat,' . $medicine->id,
             'nama_obat' => 'required|string|max:255',
+            'kategori_obat' => 'required|string|max:255',
             'satuan' => 'required|string|max:50',
-            'kategori' => 'required|in:A,B,C',
-            'harga_per_unit' => 'required|numeric|min:0',
-            'stok_aktual' => 'required|integer|min:0',
+            'tingkat_pemakaian' => 'required|in:Sangat Sering,Sering,Jarang',
+            'kategori' => 'nullable|in:A,B,C',
+            'harga_per_unit' => 'nullable|numeric|min:0',
+            'stok_aktual' => 'nullable|integer|min:0',
         ]);
 
-        $medicine->update($request->all());
+        $data = $request->all();
+        $data['kategori'] = $data['kategori'] ?? $medicine->kategori;
+        $data['harga_per_unit'] = $data['harga_per_unit'] ?? $medicine->harga_per_unit;
+        $data['stok_aktual'] = $data['stok_aktual'] ?? $medicine->stok_aktual;
+
+        $medicine->update($data);
 
         return redirect()->route('medicines.index')
             ->with('success', 'Data obat berhasil diperbarui.');

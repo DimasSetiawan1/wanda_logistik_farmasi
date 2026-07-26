@@ -18,6 +18,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'role',
@@ -51,8 +52,13 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isApoteker(): bool
+    public function isInstalasiFarmasi(): bool
     {
-        return $this->role === 'apoteker';
+        return $this->role === 'instalasi_farmasi';
+    }
+
+    public function isKepalaInstalasi(): bool
+    {
+        return $this->role === 'kepala_instalasi';
     }
 }

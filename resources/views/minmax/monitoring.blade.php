@@ -3,133 +3,138 @@
 @section('title', 'Monitoring Stok')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Monitoring Stok</li>
+    <span>/</span>
+    <span class="text-[#04aabe] font-semibold">Monitoring Stok Real-Time</span>
 @endsection
 
 @section('content')
-<div class="page-header d-flex align-items-center justify-content-between">
-    <div>
-        <h4><i class="bi bi-activity text-info me-2"></i>Monitoring Stok Aktual</h4>
-        <p class="text-muted mb-0" style="font-size: 0.85rem;">Perbandingan stok aktual vs batas Min-Max</p>
-    </div>
-    <form method="POST" action="{{ route('orders.auto') }}">
-        @csrf
-        <button type="submit" class="btn btn-danger" onclick="return confirm('Buat pesanan otomatis untuk semua obat yang stoknya di bawah minimum?')">
-            <i class="bi bi-cart-plus me-1"></i> Pesan Otomatis ({{ $summary['perlu_pesan'] }} obat)
-        </button>
-    </form>
-</div>
+<div class="space-y-6">
+    <!-- Header & Auto Order Button -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-heart-pulse text-[#04aabe]"></i>
+                <span>Monitoring Stok Aktual Obat</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Pemantauan persediaan langsung terhadap ambang batas Min-Max</p>
+        </div>
 
-<!-- Summary Cards -->
-<div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="card stat-card border-start border-4 border-success">
-            <div class="card-body d-flex align-items-center">
-                <div class="stat-icon bg-success bg-opacity-10 text-success me-3">
-                    <i class="bi bi-check-circle"></i>
-                </div>
-                <div>
-                    <div class="text-muted" style="font-size: 0.75rem;">Normal</div>
-                    <div class="fw-bold fs-4 text-success">{{ $summary['normal'] }}</div>
-                </div>
-            </div>
-        </div>
+        @if(!Auth::user()->isInstalasiFarmasi())
+        <form method="POST" action="{{ route('orders.auto') }}">
+            @csrf
+            <button type="submit" onclick="return confirm('Buat pemesanan otomatis untuk seluruh obat di bawah batas minimum?')" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-600/30 text-xs flex items-center gap-2 transition-all shrink-0">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Pesan Otomatis ({{ $summary['perlu_pesan'] }} Obat Kritis)</span>
+            </button>
+        </form>
+        @endif
     </div>
-    <div class="col-md-4">
-        <div class="card stat-card border-start border-4 border-danger">
-            <div class="card-body d-flex align-items-center">
-                <div class="stat-icon bg-danger bg-opacity-10 text-danger me-3">
-                    <i class="bi bi-exclamation-triangle"></i>
-                </div>
-                <div>
-                    <div class="text-muted" style="font-size: 0.75rem;">Perlu Pesan</div>
-                    <div class="fw-bold fs-4 text-danger">{{ $summary['perlu_pesan'] }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card stat-card border-start border-4 border-warning">
-            <div class="card-body d-flex align-items-center">
-                <div class="stat-icon bg-warning bg-opacity-10 text-warning me-3">
-                    <i class="bi bi-arrow-up-circle"></i>
-                </div>
-                <div>
-                    <div class="text-muted" style="font-size: 0.75rem;">Overstock</div>
-                    <div class="fw-bold fs-4 text-warning">{{ $summary['overstock'] }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Monitoring Table -->
-<div class="card">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
+    <!-- Status Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-brand-50 text-[#04aabe] flex items-center justify-center text-xl shrink-0">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stok Normal</p>
+                <h3 class="text-2xl font-black text-[#04aabe] mt-0.5">{{ $summary['normal'] }} Obat</h3>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shrink-0">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Perlu Dipesan</p>
+                <h3 class="text-2xl font-black text-rose-600 mt-0.5">{{ $summary['perlu_pesan'] }} Obat</h3>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0">
+                <i class="fa-solid fa-boxes-stacked"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Kelebihan (Overstock)</p>
+                <h3 class="text-2xl font-black text-amber-600 mt-0.5">{{ $summary['overstock'] }} Obat</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Monitoring -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Obat</th>
-                        <th class="text-end">Stok Aktual</th>
-                        <th class="text-end">Stok Min</th>
-                        <th class="text-end">Stok Max</th>
-                        <th>Level Stok</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Aksi</th>
+                    <tr class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                        <th class="py-3.5 px-5">No</th>
+                        <th class="py-3.5 px-5">Nama Obat</th>
+                        <th class="py-3.5 px-5 text-right">Stok Saat Ini</th>
+                        <th class="py-3.5 px-5 text-right text-rose-700">Stok Min</th>
+                        <th class="py-3.5 px-5 text-right text-[#04aabe]">Stok Max</th>
+                        <th class="py-3.5 px-5">Visual Ketersediaan</th>
+                        <th class="py-3.5 px-5 text-center">Status</th>
+                        <th class="py-3.5 px-5 text-center">Aksi Pemesanan</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
                     @forelse($calculations as $i => $calc)
                         @php
                             $stok = $calc->medicine->stok_aktual;
                             $min = $calc->stok_minimum;
                             $max = $calc->stok_maksimum;
                             $pct = $max > 0 ? min(($stok / $max) * 100, 100) : 0;
-                            $barColor = $calc->status === 'perlu_pesan' ? 'bg-danger' : ($calc->status === 'overstock' ? 'bg-warning' : 'bg-success');
+                            $barBg = $calc->status === 'perlu_pesan' ? 'bg-rose-500' : ($calc->status === 'overstock' ? 'bg-amber-500' : 'bg-[#04aabe]');
                         @endphp
-                        <tr class="{{ $calc->status === 'perlu_pesan' ? 'table-danger' : ($calc->status === 'overstock' ? 'table-warning' : '') }}">
-                            <td>{{ $i + 1 }}</td>
-                            <td class="fw-semibold">{{ $calc->medicine->nama_obat }}</td>
-                            <td class="text-end fw-bold">{{ number_format($stok) }}</td>
-                            <td class="text-end text-danger">{{ number_format($min, 0) }}</td>
-                            <td class="text-end text-success">{{ number_format($max, 0) }}</td>
-                            <td style="min-width: 150px;">
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar {{ $barColor }}" style="width: {{ $pct }}%"></div>
+                        <tr class="hover:bg-slate-50/80 transition-all {{ $calc->status === 'perlu_pesan' ? 'bg-rose-50/20' : '' }}">
+                            <td class="py-4 px-5 text-slate-400 font-bold">{{ $i + 1 }}</td>
+                            <td class="py-4 px-5 font-bold text-slate-800">{{ $calc->medicine->nama_obat }}</td>
+                            <td class="py-4 px-5 text-right font-black text-slate-900 text-sm">{{ number_format($stok) }} {{ $calc->medicine->satuan }}</td>
+                            <td class="py-4 px-5 text-right font-bold text-rose-600">{{ number_format($min, 0) }}</td>
+                            <td class="py-4 px-5 text-right font-bold text-[#04aabe]">{{ number_format($max, 0) }}</td>
+                            <td class="py-4 px-5 min-w-[160px]">
+                                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-1">
+                                    <div class="h-full {{ $barBg }} transition-all duration-500 rounded-full" style="width: {{ $pct }}%"></div>
                                 </div>
-                                <small class="text-muted">{{ number_format($pct, 0) }}%</small>
+                                <span class="text-[10px] text-slate-400 font-semibold">{{ number_format($pct, 0) }}% Dari Kapasitas Maks</span>
                             </td>
-                            <td class="text-center">
+                            <td class="py-4 px-5 text-center">
                                 @if($calc->status === 'perlu_pesan')
-                                    <span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>Perlu Pesan</span>
+                                    <span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
+                                        <i class="fa-solid fa-triangle-exclamation"></i> Kritis
+                                    </span>
                                 @elseif($calc->status === 'overstock')
-                                    <span class="badge bg-warning"><i class="bi bi-arrow-up me-1"></i>Overstock</span>
+                                    <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
+                                        <i class="fa-solid fa-boxes-stacked"></i> Overstock
+                                    </span>
                                 @else
-                                    <span class="badge bg-success"><i class="bi bi-check me-1"></i>Normal</span>
+                                    <span class="px-2.5 py-1 bg-brand-50 text-[#04aabe] border border-cyan-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
+                                        <i class="fa-solid fa-circle-check"></i> Aman
+                                    </span>
                                 @endif
                             </td>
-                            <td class="text-center">
-                                @if($calc->status === 'perlu_pesan')
-                                    <form method="POST" action="{{ route('orders.store') }}" class="d-inline">
+                            <td class="py-4 px-5 text-center">
+                                @if($calc->status === 'perlu_pesan' && !Auth::user()->isInstalasiFarmasi())
+                                    <form method="POST" action="{{ route('orders.store') }}" class="inline-block">
                                         @csrf
                                         <input type="hidden" name="medicine_id" value="{{ $calc->medicine_id }}">
                                         <input type="hidden" name="jumlah_pesan" value="{{ ceil($calc->eoq_value) }}">
-                                        <input type="hidden" name="keterangan" value="Pemesanan dari monitoring stok">
-                                        <button class="btn btn-sm btn-danger" title="Pesan ({{ ceil($calc->eoq_value) }})">
-                                            <i class="bi bi-cart-plus"></i>
+                                        <input type="hidden" name="keterangan" value="Pemesanan langsung dari monitoring stok">
+                                        <button class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-[11px] shadow-sm flex items-center gap-1.5 transition-all">
+                                            <i class="fa-solid fa-cart-plus"></i>
+                                            <span>Pesan ({{ ceil($calc->eoq_value) }})</span>
                                         </button>
                                     </form>
                                 @else
-                                    <span class="text-muted">—</span>
+                                    <span class="text-slate-300 text-xs">—</span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center text-muted py-4">Belum ada data monitoring</td>
+                            <td colspan="8" class="py-8 text-center text-slate-400">Belum ada data monitoring stok.</td>
                         </tr>
                     @endforelse
                 </tbody>

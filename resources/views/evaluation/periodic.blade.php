@@ -3,96 +3,118 @@
 @section('title', 'Review Periodik')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Review Periodik</li>
+    <span>/</span>
+    <span class="text-[#04aabe] font-semibold">Review Periodik Parameter</span>
 @endsection
 
 @section('content')
-<div class="page-header">
-    <h4><i class="bi bi-arrow-repeat text-secondary me-2"></i>Review Periodik Parameter</h4>
-    <p class="text-muted mb-0" style="font-size: 0.85rem;">Update parameter D, LT, S, H secara berkala</p>
-</div>
+<div class="space-y-6" x-data="{ activeModal: null }">
+    <!-- Header -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-arrows-rotate text-[#04aabe]"></i>
+                <span>Review Periodik Parameter Obat</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Pembaruan berkala parameter permintaan, biaya pesan, biaya simpan, dan waktu tunggu</p>
+        </div>
+    </div>
 
-<div class="card">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
+    <!-- Table -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr>
-                        <th>Obat</th>
-                        <th class="text-end">D (Permintaan)</th>
-                        <th class="text-end">S (Biaya Pesan)</th>
-                        <th class="text-end">H (Biaya Simpan)</th>
-                        <th class="text-end">LT (hari)</th>
-                        <th class="text-end">Z</th>
-                        <th>Terakhir Update</th>
-                        <th class="text-center">Aksi</th>
+                    <tr class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                        <th class="py-3.5 px-5">Nama Obat</th>
+                        <th class="py-3.5 px-5 text-right">Permintaan (D)</th>
+                        <th class="py-3.5 px-5 text-right">Biaya Pesan (S)</th>
+                        <th class="py-3.5 px-5 text-right">Biaya Simpan (H)</th>
+                        <th class="py-3.5 px-5 text-right">Lead Time</th>
+                        <th class="py-3.5 px-5 text-right">Service Level</th>
+                        <th class="py-3.5 px-5">Terakhir Update</th>
+                        @if(Auth::user()->isAdmin())
+                        <th class="py-3.5 px-5 text-center">Aksi Pembaruan</th>
+                        @endif
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
                     @forelse($parameters as $param)
-                        <tr>
-                            <td class="fw-semibold">{{ $param->medicine->nama_obat }}</td>
-                            <td class="text-end">{{ number_format($param->rata_rata_permintaan, 0) }}</td>
-                            <td class="text-end">Rp {{ number_format($param->biaya_pesan, 0, ',', '.') }}</td>
-                            <td class="text-end">Rp {{ number_format($param->biaya_simpan, 0, ',', '.') }}</td>
-                            <td class="text-end">{{ $param->lead_time }}</td>
-                            <td class="text-end">{{ $param->service_level_z }}</td>
-                            <td><small class="text-muted">{{ $param->updated_at->format('d/m/Y H:i') }}</small></td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $param->id }}">
-                                    <i class="bi bi-pencil"></i> Update
+                        <tr class="hover:bg-slate-50/80 transition-all">
+                            <td class="py-4 px-5 font-bold text-slate-800">{{ $param->medicine->nama_obat }}</td>
+                            <td class="py-4 px-5 text-right font-semibold text-slate-700">{{ number_format($param->rata_rata_permintaan, 0) }}</td>
+                            <td class="py-4 px-5 text-right font-semibold text-slate-700">Rp {{ number_format($param->biaya_pesan, 0, ',', '.') }}</td>
+                            <td class="py-4 px-5 text-right font-semibold text-slate-700">Rp {{ number_format($param->biaya_simpan, 0, ',', '.') }}</td>
+                            <td class="py-4 px-5 text-right font-bold text-[#04aabe]">{{ $param->lead_time }} Hari</td>
+                            <td class="py-4 px-5 text-right font-bold text-slate-800">{{ $param->service_level_z }}</td>
+                            <td class="py-4 px-5 text-slate-400 text-[11px]">{{ $param->updated_at->format('d/m/Y H:i') }}</td>
+                            @if(Auth::user()->isAdmin())
+                            <td class="py-4 px-5 text-center">
+                                <button @click="activeModal = {{ $param->id }}" class="px-3 py-1.5 bg-brand-50 text-[#04aabe] hover:bg-[#04aabe] hover:text-white font-bold rounded-xl text-[11px] transition-all flex items-center justify-center gap-1 mx-auto">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <span>Update</span>
                                 </button>
-                            </td>
-                        </tr>
 
-                        <!-- Edit Modal -->
-                        <div class="modal fade" id="editModal{{ $param->id }}" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <form method="POST" action="{{ route('evaluation.updateParameter', $param) }}">
-                                        @csrf @method('PUT')
-                                        <div class="modal-header">
-                                            <h6 class="modal-title">Update Parameter — {{ $param->medicine->nama_obat }}</h6>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                <!-- Modal Dialog -->
+                                <div x-show="activeModal === {{ $param->id }}" 
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0"
+                                     x-transition:enter-end="opacity-100"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100"
+                                     x-transition:leave-end="opacity-0"
+                                     class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 text-left" style="display: none;">
+                                    
+                                    <div @click.away="activeModal = null" class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-100 space-y-4">
+                                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                                            <h3 class="text-sm font-bold text-slate-800">Update Parameter — {{ $param->medicine->nama_obat }}</h3>
+                                            <button @click="activeModal = null" class="text-slate-400 hover:text-slate-600">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
                                         </div>
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label class="form-label">Rata-rata Permintaan (D)</label>
-                                                <input type="number" name="rata_rata_permintaan" class="form-control" value="{{ $param->rata_rata_permintaan }}" step="0.01" required>
+
+                                        <form method="POST" action="{{ route('evaluation.updateParameter', $param) }}" class="space-y-4">
+                                            @csrf @method('PUT')
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-700 mb-1">Rata-rata Permintaan Tahunan (D)</label>
+                                                <input type="number" name="rata_rata_permintaan" value="{{ $param->rata_rata_permintaan }}" step="0.01" min="0" class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800" required>
                                             </div>
-                                            <div class="row g-2">
-                                                <div class="col-6">
-                                                    <label class="form-label">Biaya Pesan (S)</label>
-                                                    <input type="number" name="biaya_pesan" class="form-control" value="{{ $param->biaya_pesan }}" step="0.01" required>
+
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <div>
+                                                    <label class="block text-xs font-bold text-slate-700 mb-1">Biaya Pemesanan (S)</label>
+                                                    <input type="number" name="biaya_pesan" value="{{ $param->biaya_pesan }}" step="0.01" min="0" class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800" required>
                                                 </div>
-                                                <div class="col-6">
-                                                    <label class="form-label">Biaya Simpan (H)</label>
-                                                    <input type="number" name="biaya_simpan" class="form-control" value="{{ $param->biaya_simpan }}" step="0.01" required>
-                                                </div>
-                                            </div>
-                                            <div class="row g-2 mt-1">
-                                                <div class="col-6">
-                                                    <label class="form-label">Lead Time (hari)</label>
-                                                    <input type="number" name="lead_time" class="form-control" value="{{ $param->lead_time }}" min="1" required>
-                                                </div>
-                                                <div class="col-6">
-                                                    <label class="form-label">Service Level (Z)</label>
-                                                    <input type="number" name="service_level_z" class="form-control" value="{{ $param->service_level_z }}" step="0.01">
+                                                <div>
+                                                    <label class="block text-xs font-bold text-slate-700 mb-1">Biaya Penyimpanan (H)</label>
+                                                    <input type="number" name="biaya_simpan" value="{{ $param->biaya_simpan }}" step="0.01" min="0" class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800" required>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-                                            <button type="submit" class="btn btn-primary">Update & Hitung Ulang</button>
-                                        </div>
-                                    </form>
+
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <div>
+                                                    <label class="block text-xs font-bold text-slate-700 mb-1">Lead Time (Hari)</label>
+                                                    <input type="number" name="lead_time" value="{{ $param->lead_time }}" min="1" class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800" required>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-xs font-bold text-slate-700 mb-1">Service Level (Z)</label>
+                                                    <input type="number" name="service_level_z" value="{{ $param->service_level_z }}" step="0.01" min="0" class="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800">
+                                                </div>
+                                            </div>
+
+                                            <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                                                <button type="button" @click="activeModal = null" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs">Batal</button>
+                                                <button type="submit" class="px-5 py-2 bg-[#04aabe] hover:bg-[#03899c] text-white font-bold rounded-xl text-xs shadow-md">Update & Hitung Ulang</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </td>
+                            @endif
+                        </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center text-muted py-4">Belum ada parameter</td>
+                            <td colspan="8" class="py-8 text-center text-slate-400">Belum ada data parameter obat.</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -1,162 +1,197 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Beranda Utama')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active">Dashboard</li>
+    <span>/</span>
+    <span class="text-[#04aabe] font-semibold">Beranda</span>
 @endsection
 
 @section('content')
-<div class="page-header d-flex align-items-center justify-content-between">
-    <div>
-        <h4>Dashboard</h4>
-        <p class="text-muted mb-0" style="font-size: 0.85rem;">Selamat datang, {{ Auth::user()->name }}. Berikut ringkasan logistik farmasi RSPH.</p>
+<div class="space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-[#04aabe] via-cyan-600 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-[#04aabe]/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-cyan-100 text-xs font-semibold mb-3">
+                <i class="fa-solid fa-hospital text-cyan-200"></i>
+                <span>Sistem Logistik Farmasi RS Puspa Husada</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Selamat Datang, {{ Auth::user()->name }} 👋</h1>
+            <p class="text-cyan-50 text-sm mt-1 max-w-2xl">
+                Anda masuk sebagai <span class="font-bold underline uppercase">@if(Auth::user()->isAdmin()) Administrator @elseif(Auth::user()->isInstalasiFarmasi()) Petugas Instalasi Farmasi @elseif(Auth::user()->isKepalaInstalasi()) Kepala Instalasi Farmasi @endif</span>. Berikut adalah rangkuman aktivitas logistik farmasi saat ini.
+            </p>
+        </div>
+        <div class="shrink-0 bg-white/10 p-3 rounded-2xl backdrop-blur-md hidden md:block">
+            <i class="fa-solid fa-boxes-packing text-4xl text-cyan-100"></i>
+        </div>
     </div>
-</div>
 
-<!-- Summary Cards -->
-<div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3">
-        <div class="card stat-card">
-            <div class="card-body d-flex align-items-center">
-                <div class="stat-icon bg-primary bg-opacity-10 text-primary me-3">
-                    <i class="bi bi-capsule"></i>
-                </div>
+    <!-- Summary Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Total Obat -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-center justify-between">
                 <div>
-                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 500;">Total Obat</div>
-                    <div class="fw-bold fs-4">{{ $totalObat }}</div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Obat</p>
+                    <h3 class="text-2xl font-black text-slate-800 mt-1">{{ number_format($totalObat) }}</h3>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-brand-50 text-[#04aabe] flex items-center justify-center text-xl shadow-sm">
+                    <i class="fa-solid fa-pills"></i>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="card stat-card">
-            <div class="card-body d-flex align-items-center">
-                <div class="stat-icon bg-danger bg-opacity-10 text-danger me-3">
-                    <i class="bi bi-exclamation-triangle"></i>
-                </div>
-                <div>
-                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 500;">Stok Kritis</div>
-                    <div class="fw-bold fs-4">{{ $stokKritis }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="card stat-card">
-            <div class="card-body d-flex align-items-center">
-                <div class="stat-icon bg-warning bg-opacity-10 text-warning me-3">
-                    <i class="bi bi-arrow-up-circle"></i>
-                </div>
-                <div>
-                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 500;">Overstock</div>
-                    <div class="fw-bold fs-4">{{ $overstock }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="card stat-card">
-            <div class="card-body d-flex align-items-center">
-                <div class="stat-icon bg-info bg-opacity-10 text-info me-3">
-                    <i class="bi bi-cart-check"></i>
-                </div>
-                <div>
-                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 500;">Pesanan Aktif</div>
-                    <div class="fw-bold fs-4">{{ $pesananAktif }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row g-3">
-    <!-- Chart Stok Terendah -->
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header d-flex align-items-center justify-content-between">
-                <span><i class="bi bi-bar-chart me-2"></i>10 Obat dengan Stok Terendah</span>
+        <!-- Stok Kritis -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stok Kritis (Perlu Pesan)</p>
+                    <h3 class="text-2xl font-black text-rose-600 mt-1">{{ number_format($stokKritis) }}</h3>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shadow-sm">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
             </div>
-            <div class="card-body">
-                <canvas id="stokChart" height="300"></canvas>
+        </div>
+
+        <!-- Overstock -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Batas Maks (Overstock)</p>
+                    <h3 class="text-2xl font-black text-amber-600 mt-1">{{ number_format($overstock) }}</h3>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shadow-sm">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pesanan Aktif -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pesanan Aktif</p>
+                    <h3 class="text-2xl font-black text-sky-600 mt-1">{{ number_format($pesananAktif) }}</h3>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl shadow-sm">
+                    <i class="fa-solid fa-truck-ramp-box"></i>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Obat Perlu Dipesan -->
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-exclamation-triangle text-danger me-2"></i>Perlu Dipesan
+    <!-- Chart & Alert Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Stok Terendah Chart -->
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-simple text-[#04aabe]"></i>
+                        <span>10 Obat dengan Stok Terendah</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Pantauan ketersediaan persediaan aktual obat di gudang</p>
+                </div>
             </div>
-            <div class="card-body p-0">
-                @if($perluPesan->count() > 0)
-                    <div class="list-group list-group-flush">
-                        @foreach($perluPesan as $item)
-                            <div class="list-group-item d-flex justify-content-between align-items-center py-3">
-                                <div>
-                                    <div class="fw-semibold" style="font-size: 0.85rem;">{{ $item->medicine->nama_obat }}</div>
-                                    <small class="text-muted">Stok: {{ $item->medicine->stok_aktual }} | Min: {{ number_format($item->stok_minimum, 0) }}</small>
-                                </div>
-                                <span class="badge bg-danger">Kritis</span>
-                            </div>
-                        @endforeach
+            <div class="h-72">
+                <canvas id="stokChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Warning Card - Need Order -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-bell-concierge text-rose-500"></i>
+                    <span>Daftar Perlu Dipesan</span>
+                </h3>
+                <span class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-bold rounded-lg border border-rose-200">
+                    {{ $perluPesan->count() }} Obat
+                </span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto max-h-72 space-y-3 custom-scrollbar pr-1">
+                @forelse($perluPesan as $item)
+                    <div class="p-3.5 bg-rose-50/50 border border-rose-100 rounded-xl flex items-center justify-between gap-3">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">{{ $item->medicine->nama_obat }}</h4>
+                            <p class="text-[11px] text-slate-500 mt-0.5">
+                                Stok: <span class="font-bold text-rose-600">{{ $item->medicine->stok_aktual }} {{ $item->medicine->satuan }}</span> | Min: {{ number_format($item->stok_minimum, 0) }}
+                            </p>
+                        </div>
+                        <span class="px-2 py-1 bg-rose-600 text-white text-[10px] font-bold rounded-lg shadow-sm">
+                            Kritis
+                        </span>
                     </div>
-                @else
-                    <div class="text-center text-muted py-4">
-                        <i class="bi bi-check-circle fs-1 text-success"></i>
-                        <p class="mt-2 mb-0" style="font-size: 0.85rem;">Semua stok dalam kondisi aman</p>
+                @empty
+                    <div class="text-center py-10">
+                        <div class="w-12 h-12 rounded-full bg-brand-50 text-[#04aabe] flex items-center justify-center mx-auto mb-2 text-xl">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-700">Semua Stok Aman</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Tidak ada obat di bawah batas minimum.</p>
                     </div>
-                @endif
+                @endforelse
             </div>
         </div>
     </div>
-</div>
 
-<!-- Pesanan Terbaru -->
-<div class="row g-3 mt-1">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex align-items-center justify-content-between">
-                <span><i class="bi bi-clock-history me-2"></i>Pesanan Terbaru</span>
-                <a href="{{ route('orders.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+    <!-- Recent Orders Table -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-history text-[#04aabe]"></i>
+                    <span>Riwayat Pemesanan Obat Terbaru</span>
+                </h3>
+                <p class="text-xs text-slate-500 mt-0.5">Transaksi pemesanan yang baru dilakukan ke supplier</p>
             </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Tanggal</th>
-                                <th>Obat</th>
-                                <th>Jumlah</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($pesananTerbaru as $order)
-                                <tr>
-                                    <td>{{ $order->tanggal_pesan->format('d/m/Y') }}</td>
-                                    <td>{{ $order->medicine->nama_obat }}</td>
-                                    <td>{{ number_format($order->jumlah_pesan) }}</td>
-                                    <td>
-                                        @if($order->status === 'pending')
-                                            <span class="badge bg-warning">Pending</span>
-                                        @elseif($order->status === 'diproses')
-                                            <span class="badge bg-info">Diproses</span>
-                                        @else
-                                            <span class="badge bg-success">Selesai</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted py-3">Belum ada pesanan</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            @if(!Auth::user()->isInstalasiFarmasi())
+            <a href="{{ route('orders.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
+                Lihat Semua Pesanan
+            </a>
+            @endif
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                        <th class="py-3.5 px-6">Tanggal Pesan</th>
+                        <th class="py-3.5 px-6">Nama Obat</th>
+                        <th class="py-3.5 px-6">Jumlah Pesan</th>
+                        <th class="py-3.5 px-6">Status Pemesanan</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+                    @forelse($pesananTerbaru as $order)
+                        <tr class="hover:bg-slate-50/80 transition-all">
+                            <td class="py-4 px-6 font-semibold">{{ $order->tanggal_pesan->format('d/m/Y') }}</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">{{ $order->medicine->nama_obat }}</td>
+                            <td class="py-4 px-6 font-bold text-[#04aabe]">{{ number_format($order->jumlah_pesan) }} {{ $order->medicine->satuan }}</td>
+                            <td class="py-4 px-6">
+                                @if($order->status === 'pending')
+                                    <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px]">
+                                        Menunggu (Pending)
+                                    </span>
+                                @elseif($order->status === 'diproses')
+                                    <span class="px-2.5 py-1 bg-sky-50 text-sky-700 border border-sky-200 font-bold rounded-lg text-[10px]">
+                                        Sedang Diproses
+                                    </span>
+                                @else
+                                    <span class="px-2.5 py-1 bg-brand-50 text-[#04aabe] border border-cyan-200 font-bold rounded-lg text-[10px]">
+                                        Selesai Restock
+                                    </span>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-8 text-center text-slate-400">Belum ada transaksi pemesanan obat.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -170,13 +205,13 @@
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: stokData.map(d => d.nama_obat.length > 20 ? d.nama_obat.substr(0, 20) + '...' : d.nama_obat),
+            labels: stokData.map(d => d.nama_obat.length > 18 ? d.nama_obat.substr(0, 18) + '...' : d.nama_obat),
             datasets: [{
-                label: 'Stok Aktual',
+                label: 'Jumlah Stok (Unit)',
                 data: stokData.map(d => d.stok_aktual),
-                backgroundColor: stokData.map(d => d.stok_aktual < 100 ? 'rgba(220, 38, 38, 0.8)' : d.stok_aktual < 200 ? 'rgba(217, 119, 6, 0.8)' : 'rgba(37, 99, 235, 0.8)'),
-                borderRadius: 6,
-                barThickness: 30,
+                backgroundColor: stokData.map(d => d.stok_aktual < 100 ? '#f43f5e' : d.stok_aktual < 200 ? '#f59e0b' : '#04aabe'),
+                borderRadius: 8,
+                barThickness: 24,
             }]
         },
         options: {
@@ -188,7 +223,7 @@
             scales: {
                 y: {
                     beginAtZero: true,
-                    grid: { color: 'rgba(0,0,0,0.05)' },
+                    grid: { color: '#f1f5f9' },
                     ticks: { font: { size: 11 } }
                 },
                 x: {

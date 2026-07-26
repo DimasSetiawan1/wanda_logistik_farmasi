@@ -3,109 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') — Logistik Farmasi RSPH</title>
-
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <title>@yield('title') — Logistik Farmasi RS Puspa Husada</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fafb',
+                            100: '#d9f2f5',
+                            200: '#b4e5ec',
+                            300: '#7fd3e0',
+                            400: '#41b9ce',
+                            500: '#04aabe',
+                            600: '#03899c',
+                            700: '#036e7e',
+                            800: '#075967',
+                            900: '#0b4a56',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .auth-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            max-width: 440px;
-            width: 100%;
-        }
-
-        .auth-header {
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            padding: 2rem;
-            text-align: center;
-            color: #fff;
-        }
-
-        .auth-header h3 {
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-
-        .auth-header p {
-            font-size: 0.85rem;
-            opacity: 0.85;
-            margin: 0;
-        }
-
-        .auth-body {
-            padding: 2rem;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            padding: 0.6rem 1rem;
-            border-color: #cbd5e1;
-        }
-
-        .form-control:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .form-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .btn-auth {
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            border: none;
-            border-radius: 8px;
-            padding: 0.65rem;
-            font-weight: 600;
-            width: 100%;
-            color: #fff;
-            transition: opacity 0.2s ease;
-        }
-
-        .btn-auth:hover {
-            opacity: 0.9;
-            color: #fff;
-        }
-
-        .auth-footer {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #64748b;
-        }
-
-        .auth-footer a {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 600;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
     </style>
 </head>
-<body>
-    @yield('content')
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4 antialiased selection:bg-brand-500 selection:text-white relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('content')
 </body>
 </html>

@@ -12,9 +12,11 @@ return new class extends Migration
             $table->id();
             $table->string('kode_obat')->unique();
             $table->string('nama_obat');
+            $table->string('kategori_obat')->default('Obat Umum');
             $table->string('satuan');
+            $table->enum('tingkat_pemakaian', ['Sangat Sering', 'Sering', 'Jarang'])->default('Sering');
             $table->enum('kategori', ['A', 'B', 'C'])->default('C');
-            $table->decimal('harga_per_unit', 15, 2);
+            $table->decimal('harga_per_unit', 15, 2)->default(0);
             $table->integer('stok_aktual')->default(0);
             $table->timestamps();
         });

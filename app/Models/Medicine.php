@@ -12,7 +12,9 @@ class Medicine extends Model
     protected $fillable = [
         'kode_obat',
         'nama_obat',
+        'kategori_obat',
         'satuan',
+        'tingkat_pemakaian',
         'kategori',
         'harga_per_unit',
         'stok_aktual',

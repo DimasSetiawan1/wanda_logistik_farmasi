@@ -23,13 +23,15 @@ class UserManagementController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,apoteker',
+            'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'nullable|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
+            'role' => 'required|in:admin,instalasi_farmasi,kepala_instalasi',
         ]);
 
         User::create([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
@@ -48,13 +50,15 @@ class UserManagementController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:admin,apoteker',
-            'password' => 'nullable|string|min:8|confirmed',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'nullable|email|unique:users,email,' . $user->id,
+            'role' => 'required|in:admin,instalasi_farmasi,kepala_instalasi',
+            'password' => 'nullable|string|min:6|confirmed',
         ]);
 
         $data = [
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'role' => $request->role,
         ];
