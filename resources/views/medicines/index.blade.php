@@ -59,29 +59,30 @@
                     <thead>
                         <tr
                             class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                            <th class="py-3.5 px-6">Kode Obat</th>
-                            <th class="py-3.5 px-6">Nama Obat</th>
-                            <th class="py-3.5 px-6">Kategori Obat</th>
-                            <th class="py-3.5 px-6">Satuan</th>
-                            <th class="py-3.5 px-6">Tingkat Pemakaian</th>
-                            <th class="py-3.5 px-6">Harga / Unit</th>
-                            <th class="py-3.5 px-6">Stok Aktual</th>
-                            <th class="py-3.5 px-6 text-center">Aksi</th>
+                            <th class="py-3.5 px-5">Kode Obat</th>
+                            <th class="py-3.5 px-5">Nama Obat</th>
+                            <th class="py-3.5 px-5">Kategori Obat</th>
+                            <th class="py-3.5 px-5">Satuan</th>
+                            <th class="py-3.5 px-5">Tingkat Pemakaian</th>
+                            <th class="py-3.5 px-5">Tgl Kadaluarsa</th>
+                            <th class="py-3.5 px-5">Harga / Unit</th>
+                            <th class="py-3.5 px-5">Stok Aktual</th>
+                            <th class="py-3.5 px-5 text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
                         @forelse($medicines as $medicine)
                             <tr class="hover:bg-slate-50/80 transition-all">
-                                <td class="py-4 px-6 font-mono font-bold text-slate-500">{{ $medicine->kode_obat }}</td>
-                                <td class="py-4 px-6 font-bold text-slate-800">{{ $medicine->nama_obat }}</td>
-                                <td class="py-4 px-6">
+                                <td class="py-4 px-5 font-mono font-bold text-slate-500">{{ $medicine->kode_obat }}</td>
+                                <td class="py-4 px-5 font-bold text-slate-800">{{ $medicine->nama_obat }}</td>
+                                <td class="py-4 px-5">
                                     <span
                                         class="px-2.5 py-1 bg-slate-100 text-slate-700 font-semibold rounded-lg text-[11px] whitespace-nowrap inline-block">
                                         {{ $medicine->kategori_obat ?? 'Obat Umum' }}
                                     </span>
                                 </td>
-                                <td class="py-4 px-6 font-medium text-slate-600">{{ $medicine->satuan }}</td>
-                                <td class="py-4 px-6">
+                                <td class="py-4 px-5 font-medium text-slate-600">{{ $medicine->satuan }}</td>
+                                <td class="py-4 px-5">
                                     @if($medicine->tingkat_pemakaian === 'Sangat Sering')
                                         <span
                                             class="px-2.5 py-1 bg-brand-50 text-[#04aabe] border border-cyan-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
@@ -99,13 +100,32 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="py-4 px-6 font-semibold text-slate-800">Rp
+                                <td class="py-4 px-5">
+                                    @if($medicine->tanggal_kadaluarsa)
+                                        @if($medicine->isExpired())
+                                            <span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
+                                                <i class="fa-solid fa-triangle-exclamation"></i> {{ $medicine->tanggal_kadaluarsa->format('d/m/Y') }} (Expired)
+                                            </span>
+                                        @elseif($medicine->isNearExpired())
+                                            <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
+                                                <i class="fa-solid fa-clock-rotate-left"></i> {{ $medicine->tanggal_kadaluarsa->format('d/m/Y') }} (Segera Expiry)
+                                            </span>
+                                        @else
+                                            <span class="font-medium text-slate-700 whitespace-nowrap">
+                                                {{ $medicine->tanggal_kadaluarsa->format('d/m/Y') }}
+                                            </span>
+                                        @endif
+                                    @else
+                                        <span class="text-slate-400 font-normal italic">-</span>
+                                    @endif
+                                </td>
+                                <td class="py-4 px-5 font-semibold text-slate-800">Rp
                                     {{ number_format($medicine->harga_per_unit, 0, ',', '.') }}</td>
-                                <td class="py-4 px-6 font-bold text-slate-900">
+                                <td class="py-4 px-5 font-bold text-slate-900">
                                     {{ number_format($medicine->stok_aktual) }} <span
                                         class="text-[10px] text-slate-400 font-normal">{{ $medicine->satuan }}</span>
                                 </td>
-                                <td class="py-4 px-6 text-center">
+                                <td class="py-4 px-5 text-center">
                                     <div class="flex items-center justify-center gap-2">
                                         <a href="{{ route('medicines.edit', $medicine->id) }}"
                                             class="p-2 bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white rounded-xl transition-all"
@@ -129,7 +149,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="py-8 text-center text-slate-400">Tidak ada data obat yang ditemukan.</td>
+                                <td colspan="9" class="py-8 text-center text-slate-400">Tidak ada data obat yang ditemukan.</td>
                             </tr>
                         @endforelse
                     </tbody>

@@ -77,7 +77,7 @@
                     </select>
                 </div>
 
-                <!-- Tingkat Pemakaian (Seberapa sering obat dipakai) -->
+                <!-- Tingkat Pemakaian -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                         Tingkat Pemakaian Obat <span class="text-rose-500">*</span>
@@ -87,7 +87,6 @@
                         <option value="Sering" {{ old('tingkat_pemakaian', 'Sering') == 'Sering' ? 'selected' : '' }}>⚡ Sering (Sedang)</option>
                         <option value="Jarang" {{ old('tingkat_pemakaian') == 'Jarang' ? 'selected' : '' }}>📦 Jarang (Rendah)</option>
                     </select>
-                    <p class="text-[10px] text-slate-400 mt-1">Menentukan seberapa sering obat ini diminta/digunakan pada instalasi farmasi.</p>
                 </div>
 
                 <!-- Harga Per Unit -->
@@ -100,6 +99,15 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Stok Saat Ini (Aktual)</label>
                     <input type="number" name="stok_aktual" value="{{ old('stok_aktual', 0) }}" min="0" class="w-full px-4 py-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#04aabe] focus:border-[#04aabe] font-bold text-slate-800">
+                </div>
+
+                <!-- Tanggal Kadaluarsa (Expired Date) -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <i class="fa-solid fa-calendar-days text-[#04aabe]"></i>
+                        <span>Tanggal Kadaluarsa </span>
+                    </label>
+                    <input type="date" name="tanggal_kadaluarsa" value="{{ old('tanggal_kadaluarsa') }}" class="w-full px-4 py-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#04aabe] focus:border-[#04aabe] font-semibold text-slate-800">
                 </div>
             </div>
 

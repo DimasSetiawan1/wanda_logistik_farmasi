@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Parameter EOQ')
+@section('title', 'Parameter Optimasi Stok')
 
 @section('breadcrumb')
     <span>/</span>
-    <span class="text-[#04aabe] font-semibold">Parameter EOQ</span>
+    <span class="text-[#04aabe] font-semibold">Parameter Optimasi Stok</span>
 @endsection
 
 @section('content')
@@ -14,7 +14,7 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-sliders text-[#04aabe]"></i>
-                <span>Perhitungan & Parameter EOQ</span>
+                <span>Perhitungan & Parameter Optimasi Stok</span>
             </h2>
             <p class="text-xs text-slate-500 mt-1">Kuantitas Pemesanan Optimal untuk Efisiensi Biaya Persediaan Obat</p>
         </div>
@@ -101,7 +101,7 @@
 
                 <button type="submit" class="w-full py-3 bg-[#04aabe] hover:bg-[#03899c] text-white font-bold rounded-xl shadow-lg shadow-[#04aabe]/30 text-xs flex items-center justify-center gap-2 transition-all">
                     <i class="fa-solid fa-calculator"></i>
-                    <span>Hitung EOQ & Min-Max Stock</span>
+                    <span>Hitung Optimasi & Batas Persediaan</span>
                 </button>
             </form>
 
@@ -123,7 +123,7 @@
                     <i class="fa-solid fa-list-check text-[#04aabe]"></i>
                     <span>Daftar Parameter Terpasang</span>
                 </h3>
-                <p class="text-xs text-slate-500 mt-1">Status variabel pesanan yang telah dikonfigurasi untuk setiap jenis obat</p>
+                <p class="text-xs text-slate-500 mt-1">Status variabel persediaan yang telah dikonfigurasi untuk setiap jenis obat</p>
             </div>
 
             <div class="flex-1 overflow-x-auto">

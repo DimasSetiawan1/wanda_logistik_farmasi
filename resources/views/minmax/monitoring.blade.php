@@ -9,25 +9,15 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- Header & Auto Order Button -->
+    <!-- Header -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
         <div>
             <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-heart-pulse text-[#04aabe]"></i>
                 <span>Monitoring Stok Aktual Obat</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-1">Pemantauan persediaan langsung terhadap ambang batas Min-Max</p>
+            <p class="text-xs text-slate-500 mt-1">Pemantauan persediaan langsung terhadap ambang batas Minimum & Maksimum</p>
         </div>
-
-        @if(!Auth::user()->isInstalasiFarmasi())
-        <form method="POST" action="{{ route('orders.auto') }}">
-            @csrf
-            <button type="submit" onclick="return confirm('Buat pemesanan otomatis untuk seluruh obat di bawah batas minimum?')" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-600/30 text-xs flex items-center gap-2 transition-all shrink-0">
-                <i class="fa-solid fa-cart-plus"></i>
-                <span>Pesan Otomatis ({{ $summary['perlu_pesan'] }} Obat Kritis)</span>
-            </button>
-        </form>
-        @endif
     </div>
 
     <!-- Status Cards -->
@@ -47,7 +37,7 @@
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Perlu Dipesan</p>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stok Kritis</p>
                 <h3 class="text-2xl font-black text-rose-600 mt-0.5">{{ $summary['perlu_pesan'] }} Obat</h3>
             </div>
         </div>
@@ -76,7 +66,6 @@
                         <th class="py-3.5 px-5 text-right text-[#04aabe]">Stok Max</th>
                         <th class="py-3.5 px-5">Visual Ketersediaan</th>
                         <th class="py-3.5 px-5 text-center">Status</th>
-                        <th class="py-3.5 px-5 text-center">Aksi Pemesanan</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
@@ -115,26 +104,10 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="py-4 px-5 text-center">
-                                @if($calc->status === 'perlu_pesan' && !Auth::user()->isInstalasiFarmasi())
-                                    <form method="POST" action="{{ route('orders.store') }}" class="inline-block">
-                                        @csrf
-                                        <input type="hidden" name="medicine_id" value="{{ $calc->medicine_id }}">
-                                        <input type="hidden" name="jumlah_pesan" value="{{ ceil($calc->eoq_value) }}">
-                                        <input type="hidden" name="keterangan" value="Pemesanan langsung dari monitoring stok">
-                                        <button class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-[11px] shadow-sm flex items-center gap-1.5 transition-all">
-                                            <i class="fa-solid fa-cart-plus"></i>
-                                            <span>Pesan ({{ ceil($calc->eoq_value) }})</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    <span class="text-slate-300 text-xs">—</span>
-                                @endif
-                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="py-8 text-center text-slate-400">Belum ada data monitoring stok.</td>
+                            <td colspan="7" class="py-8 text-center text-slate-400">Belum ada data monitoring stok.</td>
                         </tr>
                     @endforelse
                 </tbody>

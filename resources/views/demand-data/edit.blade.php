@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Ubah Permintaan Obat')
+@section('title', Auth::user()->isInstalasiFarmasi() ? 'Ubah Pemakaian Obat' : 'Ubah Permintaan Obat')
 
 @section('breadcrumb')
     <span>/</span>
-    <a href="{{ route('demand-data.index') }}" class="hover:text-[#04aabe]">Data Permintaan</a>
+    <a href="{{ route('demand-data.index') }}" class="hover:text-[#04aabe]">{{ Auth::user()->isInstalasiFarmasi() ? 'Data Pemakaian' : 'Data Permintaan' }}</a>
     <span>/</span>
     <span class="text-[#04aabe] font-semibold">Ubah</span>
 @endsection
@@ -15,9 +15,9 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-pen-to-square text-[#04aabe]"></i>
-                <span>Ubah Data Permintaan</span>
+                <span>{{ Auth::user()->isInstalasiFarmasi() ? 'Ubah Data Pemakaian Obat' : 'Ubah Data Permintaan Obat' }}</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-1">Perbarui data pemakaian obat {{ $demandDatum->medicine->nama_obat }}</p>
+            <p class="text-xs text-slate-500 mt-1">Perbarui data {{ Auth::user()->isInstalasiFarmasi() ? 'pemakaian' : 'permintaan' }} obat</p>
         </div>
         <a href="{{ route('demand-data.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all flex items-center gap-2">
             <i class="fa-solid fa-arrow-left"></i>
@@ -41,11 +41,12 @@
             @method('PUT')
             
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Obat <span class="text-rose-500">*</span></label>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Pilih Obat <span class="text-rose-500">*</span></label>
                 <select name="medicine_id" class="w-full px-4 py-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#04aabe] font-medium text-slate-800" required>
+                    <option value="">-- Pilih Obat --</option>
                     @foreach($medicines as $m)
                         <option value="{{ $m->id }}" {{ old('medicine_id', $demandDatum->medicine_id) == $m->id ? 'selected' : '' }}>
-                            {{ $m->kode_obat }} — {{ $m->nama_obat }}
+                            {{ $m->kode_obat }} — {{ $m->nama_obat }} (Stok: {{ number_format($m->stok_aktual) }} {{ $m->satuan }})
                         </option>
                     @endforeach
                 </select>
@@ -57,7 +58,9 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Jumlah Permintaan <span class="text-rose-500">*</span></label>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    {{ Auth::user()->isInstalasiFarmasi() ? 'Jumlah Pemakaian' : 'Jumlah Permintaan' }} <span class="text-rose-500">*</span>
+                </label>
                 <input type="number" name="jumlah_permintaan" value="{{ old('jumlah_permintaan', $demandDatum->jumlah_permintaan) }}" min="1" class="w-full px-4 py-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#04aabe] font-bold text-slate-800" required>
             </div>
 

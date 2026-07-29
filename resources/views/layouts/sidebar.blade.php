@@ -31,68 +31,63 @@
                 @if(!Auth::user()->isKepalaInstalasi())
                 <a href="{{ route('demand-data.index') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('demand-data.*') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-chart-line w-4 text-center text-xs"></i>
-                    <span>Data Permintaan</span>
+                    <span>{{ Auth::user()->isInstalasiFarmasi() ? 'Data Pemakaian' : 'Data Permintaan' }}</span>
                 </a>
                 @endif
             </div>
         </div>
 
         @if(!Auth::user()->isInstalasiFarmasi())
-        <!-- Perhitungan EOQ & Min-Max -->
+        <!-- Optimasi & Batas Stok -->
         <div>
-            <div class="px-3 mb-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase">EOQ & Min-Max</div>
+            <div class="px-3 mb-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase">Optimasi & Batas Stok</div>
             <div class="space-y-1">
                 @if(Auth::user()->isAdmin())
                 <a href="{{ route('eoq.index') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('eoq.index') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-sliders w-4 text-center text-xs"></i>
-                    <span>Parameter EOQ</span>
+                    <span>Parameter Optimasi Stok</span>
                 </a>
                 @endif
 
                 <a href="{{ route('eoq.result') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('eoq.result') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-calculator w-4 text-center text-xs"></i>
-                    <span>Hasil EOQ</span>
+                    <span>Hasil Optimasi Stok</span>
                 </a>
 
                 <a href="{{ route('minmax.result') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('minmax.result') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-chart-column w-4 text-center text-xs"></i>
-                    <span>Hasil Min-Max</span>
+                    <span>Hasil Batas Persediaan</span>
                 </a>
 
                 <a href="{{ route('minmax.monitoring') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('minmax.monitoring') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-heart-pulse w-4 text-center text-xs"></i>
-                    <span>Monitoring Stok</span>
+                    <span>Monitoring Batas Stok</span>
                 </a>
             </div>
         </div>
 
-        <!-- Pemesanan & Evaluasi -->
+        <!-- Evaluasi & Prioritas -->
         <div>
-            <div class="px-3 mb-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase">Pemesanan & Evaluasi</div>
+            <div class="px-3 mb-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase">Evaluasi & Prioritas</div>
             <div class="space-y-1">
-                <a href="{{ route('orders.index') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('orders.*') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
-                    <i class="fa-solid fa-cart-shopping w-4 text-center text-xs"></i>
-                    <span>Daftar Pesanan</span>
-                </a>
-
                 <a href="{{ route('evaluation.abc') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('evaluation.abc') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-chart-pie w-4 text-center text-xs"></i>
-                    <span>Analisis ABC</span>
+                    <span>Prioritas Kategori Stok</span>
                 </a>
 
                 <a href="{{ route('evaluation.eoq') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('evaluation.eoq') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-scale-balanced w-4 text-center text-xs"></i>
-                    <span>Evaluasi EOQ</span>
+                    <span>Evaluasi Efisiensi Stok</span>
                 </a>
 
                 <a href="{{ route('evaluation.periodic') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('evaluation.periodic') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-arrows-rotate w-4 text-center text-xs"></i>
-                    <span>Review Periodik</span>
+                    <span>Review Periodik Stok</span>
                 </a>
             </div>
         </div>
 
-        <!-- Laporan & Admin -->
+        <!-- Laporan & Pengaturan -->
         <div>
             <div class="px-3 mb-2 text-[10px] font-bold text-slate-400 tracking-wider uppercase">Laporan & Pengaturan</div>
             <div class="space-y-1">

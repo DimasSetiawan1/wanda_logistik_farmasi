@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('kategori', ['A', 'B', 'C'])->default('C');
             $table->decimal('harga_per_unit', 15, 2)->default(0);
             $table->integer('stok_aktual')->default(0);
+            $table->date('tanggal_kadaluarsa')->nullable();
             $table->timestamps();
         });
     }

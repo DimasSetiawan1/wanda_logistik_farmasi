@@ -16,7 +16,7 @@
                 <i class="fa-solid fa-file-pdf text-rose-600"></i>
                 <span>Laporan Output Logistik Farmasi</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-1">Rekomendasi kuantitas pemesanan (EOQ) dan ambang batas Min-Max Stock RS Puspa Husada</p>
+            <p class="text-xs text-slate-500 mt-1">Rekomendasi kuantitas pemesanan optimal dan ambang batas stok RS Puspa Husada</p>
         </div>
         <a href="{{ route('reports.pdf') }}" target="_blank" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-600/30 text-xs flex items-center gap-2 transition-all shrink-0">
             <i class="fa-solid fa-file-arrow-down"></i>
@@ -27,7 +27,7 @@
     <!-- Reports Table -->
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-slate-100">
-            <h3 class="text-base font-bold text-slate-800">Rangkuman Rekomendasi EOQ & Batas Stok</h3>
+            <h3 class="text-base font-bold text-slate-800">Rangkuman Rekomendasi Kuantitas & Batas Stok</h3>
             <p class="text-xs text-slate-500 mt-0.5">Hasil lengkap kalkulasi persediaan obat</p>
         </div>
         <div class="overflow-x-auto">
@@ -38,7 +38,7 @@
                         <th class="py-3.5 px-5">Kode</th>
                         <th class="py-3.5 px-5">Nama Obat</th>
                         <th class="py-3.5 px-5 text-right">Stok Saat Ini</th>
-                        <th class="py-3.5 px-5 text-right bg-brand-50 text-[#04aabe] font-extrabold">EOQ (Unit)</th>
+                        <th class="py-3.5 px-5 text-right bg-brand-50 text-[#04aabe] font-extrabold">Kuantitas Optimal</th>
                         <th class="py-3.5 px-5 text-right">Frekuensi Pesan</th>
                         <th class="py-3.5 px-5 text-right text-rose-700 font-bold">Stok Min</th>
                         <th class="py-3.5 px-5 text-right text-[#04aabe] font-bold">Stok Max</th>
@@ -63,7 +63,7 @@
                             <td class="py-4 px-5 text-center">
                                 @if($calc->status === 'perlu_pesan')
                                     <span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-triangle-exclamation"></i> Perlu Pesan
+                                        <i class="fa-solid fa-triangle-exclamation"></i> Kritis
                                     </span>
                                 @elseif($calc->status === 'overstock')
                                     <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">

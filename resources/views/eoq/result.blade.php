@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Hasil EOQ')
+@section('title', 'Hasil Optimasi Stok')
 
 @section('breadcrumb')
     <span>/</span>
-    <a href="{{ route('eoq.index') }}" class="hover:text-[#04aabe]">Parameter EOQ</a>
+    <a href="{{ route('eoq.index') }}" class="hover:text-[#04aabe]">Parameter Optimasi Stok</a>
     <span>/</span>
     <span class="text-[#04aabe] font-semibold">Hasil Perhitungan</span>
 @endsection
@@ -16,7 +16,7 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-square-poll-vertical text-[#04aabe]"></i>
-                <span>Hasil Perhitungan EOQ</span>
+                <span>Hasil Optimasi Kuantitas Pemesanan</span>
             </h2>
             <p class="text-xs text-slate-500 mt-1">Kuantitas optimal pemesanan, frekuensi pesan, dan total biaya persediaan per obat</p>
         </div>
@@ -38,7 +38,7 @@
                         <th class="py-3.5 px-5 text-right">Permintaan (D)</th>
                         <th class="py-3.5 px-5 text-right">Biaya Pesan (S)</th>
                         <th class="py-3.5 px-5 text-right">Biaya Simpan (H)</th>
-                        <th class="py-3.5 px-5 text-right bg-brand-50 text-[#04aabe] font-extrabold">Kuantitas Optimal (EOQ)</th>
+                        <th class="py-3.5 px-5 text-right bg-brand-50 text-[#04aabe] font-extrabold">Kuantitas Optimal</th>
                         <th class="py-3.5 px-5 text-right">Frekuensi Pesan</th>
                         <th class="py-3.5 px-5 text-right">Total Biaya (TC)</th>
                     </tr>
@@ -61,7 +61,7 @@
                     @empty
                         <tr>
                             <td colspan="9" class="py-8 text-center text-slate-400">
-                                Belum ada hasil perhitungan. <a href="{{ route('eoq.index') }}" class="text-[#04aabe] font-bold underline">Hitung EOQ Sekarang</a>
+                                Belum ada hasil perhitungan. <a href="{{ route('eoq.index') }}" class="text-[#04aabe] font-bold underline">Hitung Parameter Sekarang</a>
                             </td>
                         </tr>
                     @endforelse

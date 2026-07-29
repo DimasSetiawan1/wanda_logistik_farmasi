@@ -45,7 +45,7 @@
         <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stok Kritis (Perlu Pesan)</p>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stok Kritis (Batas Min)</p>
                     <h3 class="text-2xl font-black text-rose-600 mt-1">{{ number_format($stokKritis) }}</h3>
                 </div>
                 <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl shadow-sm">
@@ -58,7 +58,7 @@
         <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Batas Maks (Overstock)</p>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Batas Maksimum</p>
                     <h3 class="text-2xl font-black text-amber-600 mt-1">{{ number_format($overstock) }}</h3>
                 </div>
                 <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shadow-sm">
@@ -67,15 +67,15 @@
             </div>
         </div>
 
-        <!-- Pesanan Aktif -->
+        <!-- Total Catatan Pemakaian/Permintaan -->
         <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pesanan Aktif</p>
-                    <h3 class="text-2xl font-black text-sky-600 mt-1">{{ number_format($pesananAktif) }}</h3>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">{{ Auth::user()->isInstalasiFarmasi() ? 'Catatan Pemakaian' : 'Record Permintaan' }}</p>
+                    <h3 class="text-2xl font-black text-sky-600 mt-1">{{ number_format($totalPemakaian) }}</h3>
                 </div>
                 <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-xl shadow-sm">
-                    <i class="fa-solid fa-truck-ramp-box"></i>
+                    <i class="fa-solid fa-clipboard-list"></i>
                 </div>
             </div>
         </div>
@@ -103,8 +103,8 @@
         <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-bell-concierge text-rose-500"></i>
-                    <span>Daftar Perlu Dipesan</span>
+                    <i class="fa-solid fa-bell text-rose-500"></i>
+                    <span>Daftar Stok Kritis</span>
                 </h3>
                 <span class="px-2.5 py-1 bg-rose-50 text-rose-700 text-xs font-bold rounded-lg border border-rose-200">
                     {{ $perluPesan->count() }} Obat
@@ -137,19 +137,19 @@
         </div>
     </div>
 
-    <!-- Recent Orders Table -->
+    <!-- Recent Demand/Usage Table -->
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-slate-100 flex items-center justify-between">
             <div>
                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-history text-[#04aabe]"></i>
-                    <span>Riwayat Pemesanan Obat Terbaru</span>
+                    <i class="fa-solid fa-clock-rotate-left text-[#04aabe]"></i>
+                    <span>Catatan {{ Auth::user()->isInstalasiFarmasi() ? 'Pemakaian' : 'Permintaan' }} Obat Terbaru</span>
                 </h3>
-                <p class="text-xs text-slate-500 mt-0.5">Transaksi pemesanan yang baru dilakukan ke supplier</p>
+                <p class="text-xs text-slate-500 mt-0.5">Transaksi {{ Auth::user()->isInstalasiFarmasi() ? 'pemakaian' : 'permintaan' }} obat yang baru diinputkan</p>
             </div>
-            @if(!Auth::user()->isInstalasiFarmasi())
-            <a href="{{ route('orders.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
-                Lihat Semua Pesanan
+            @if(!Auth::user()->isKepalaInstalasi())
+            <a href="{{ route('demand-data.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
+                Lihat Semua
             </a>
             @endif
         </div>
@@ -157,37 +157,24 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                        <th class="py-3.5 px-6">Tanggal Pesan</th>
                         <th class="py-3.5 px-6">Nama Obat</th>
-                        <th class="py-3.5 px-6">Jumlah Pesan</th>
-                        <th class="py-3.5 px-6">Status Pemesanan</th>
+                        <th class="py-3.5 px-6">Periode</th>
+                        <th class="py-3.5 px-6">Jumlah {{ Auth::user()->isInstalasiFarmasi() ? 'Pemakaian' : 'Permintaan' }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
-                    @forelse($pesananTerbaru as $order)
+                    @forelse($pemakaianTerbaru as $item)
                         <tr class="hover:bg-slate-50/80 transition-all">
-                            <td class="py-4 px-6 font-semibold">{{ $order->tanggal_pesan->format('d/m/Y') }}</td>
-                            <td class="py-4 px-6 font-bold text-slate-800">{{ $order->medicine->nama_obat }}</td>
-                            <td class="py-4 px-6 font-bold text-[#04aabe]">{{ number_format($order->jumlah_pesan) }} {{ $order->medicine->satuan }}</td>
-                            <td class="py-4 px-6">
-                                @if($order->status === 'pending')
-                                    <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px]">
-                                        Menunggu (Pending)
-                                    </span>
-                                @elseif($order->status === 'diproses')
-                                    <span class="px-2.5 py-1 bg-sky-50 text-sky-700 border border-sky-200 font-bold rounded-lg text-[10px]">
-                                        Sedang Diproses
-                                    </span>
-                                @else
-                                    <span class="px-2.5 py-1 bg-brand-50 text-[#04aabe] border border-cyan-200 font-bold rounded-lg text-[10px]">
-                                        Selesai Restock
-                                    </span>
-                                @endif
+                            <td class="py-4 px-6 font-bold text-slate-800">
+                                {{ $item->medicine->nama_obat }}
+                                <span class="block text-[10px] text-slate-400 font-mono">{{ $item->medicine->kode_obat }}</span>
                             </td>
+                            <td class="py-4 px-6 font-semibold text-slate-700">{{ $item->periode }}</td>
+                            <td class="py-4 px-6 font-bold text-[#04aabe]">{{ number_format($item->jumlah_permintaan) }} {{ $item->medicine->satuan }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="py-8 text-center text-slate-400">Belum ada transaksi pemesanan obat.</td>
+                            <td colspan="3" class="py-8 text-center text-slate-400">Belum ada catatan {{ Auth::user()->isInstalasiFarmasi() ? 'pemakaian' : 'permintaan' }}.</td>
                         </tr>
                     @endforelse
                 </tbody>

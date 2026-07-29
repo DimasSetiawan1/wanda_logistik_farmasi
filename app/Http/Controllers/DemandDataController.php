@@ -23,7 +23,7 @@ class DemandDataController extends Controller
             });
         }
 
-        $demandData = $query->orderBy('periode', 'desc')->paginate(15);
+        $demandData = $query->orderBy('created_at', 'desc')->paginate(15);
         $medicines = Medicine::orderBy('nama_obat')->get();
 
         return view('demand-data.index', compact('demandData', 'medicines'));
@@ -40,13 +40,20 @@ class DemandDataController extends Controller
         $request->validate([
             'medicine_id' => 'required|exists:medicines,id',
             'periode' => 'required|string',
-            'jumlah_permintaan' => 'required|integer|min:0',
+            'jumlah_permintaan' => 'required|integer|min:1',
         ]);
+
+        $medicine = Medicine::findOrFail($request->medicine_id);
 
         DemandData::create($request->all());
 
+        // Otomatis kurangi stok aktual obat saat pengajuan/permintaan dilakukan
+        if ($request->jumlah_permintaan > 0) {
+            $medicine->decrement('stok_aktual', $request->jumlah_permintaan);
+        }
+
         return redirect()->route('demand-data.index')
-            ->with('success', 'Data permintaan berhasil ditambahkan.');
+            ->with('success', "Data permintaan berhasil ditambahkan. Stok {$medicine->nama_obat} berkurang {$request->jumlah_permintaan} {$medicine->satuan}.");
     }
 
     public function edit(DemandData $demandDatum)
@@ -63,17 +70,45 @@ class DemandDataController extends Controller
             'jumlah_permintaan' => 'required|integer|min:0',
         ]);
 
+        $oldAmount = $demandDatum->jumlah_permintaan;
+        $newAmount = $request->jumlah_permintaan;
+        $diff = $newAmount - $oldAmount;
+
+        $medicine = Medicine::findOrFail($request->medicine_id);
+
+        if ($demandDatum->medicine_id != $request->medicine_id) {
+            // Jika ganti obat: kembalikan stok obat lama, kurangi stok obat baru
+            $oldMedicine = Medicine::find($demandDatum->medicine_id);
+            if ($oldMedicine) {
+                $oldMedicine->increment('stok_aktual', $oldAmount);
+            }
+            $medicine->decrement('stok_aktual', $newAmount);
+        } else {
+            // Obat sama: sesuaikan selisih
+            if ($diff > 0) {
+                $medicine->decrement('stok_aktual', $diff);
+            } elseif ($diff < 0) {
+                $medicine->increment('stok_aktual', abs($diff));
+            }
+        }
+
         $demandDatum->update($request->all());
 
         return redirect()->route('demand-data.index')
-            ->with('success', 'Data permintaan berhasil diperbarui.');
+            ->with('success', 'Data permintaan dan stok obat berhasil diperbarui.');
     }
 
     public function destroy(DemandData $demandDatum)
     {
+        // Restore stok jika data permintaan dihapus
+        $medicine = $demandDatum->medicine;
+        if ($medicine && $demandDatum->jumlah_permintaan > 0) {
+            $medicine->increment('stok_aktual', $demandDatum->jumlah_permintaan);
+        }
+
         $demandDatum->delete();
 
         return redirect()->route('demand-data.index')
-            ->with('success', 'Data permintaan berhasil dihapus.');
+            ->with('success', 'Data permintaan berhasil dihapus dan stok obat dikembalikan.');
     }
 }

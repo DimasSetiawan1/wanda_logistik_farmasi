@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Analisis ABC')
+@section('title', 'Prioritas Kategori Stok')
 
 @section('breadcrumb')
     <span>/</span>
-    <span class="text-[#04aabe] font-semibold">Analisis Kategori ABC</span>
+    <span class="text-[#04aabe] font-semibold">Klasifikasi Prioritas Stok</span>
 @endsection
 
 @section('content')
@@ -14,7 +14,7 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-chart-pie text-[#04aabe]"></i>
-                <span>Analisis Klasifikasi ABC</span>
+                <span>Klasifikasi Prioritas Persediaan</span>
             </h2>
             <p class="text-xs text-slate-500 mt-1">Pengelompokan persediaan obat berdasarkan tingkat investasi dan nilai pemakaian tahunan</p>
         </div>
@@ -46,7 +46,7 @@
         <!-- Chart -->
         <div class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
             <div>
-                <h3 class="text-base font-bold text-slate-800 mb-1">Distribusi Kategori ABC</h3>
+                <h3 class="text-base font-bold text-slate-800 mb-1">Distribusi Prioritas Stok</h3>
                 <p class="text-xs text-slate-400">Proporsi item obat per kelompok investasi</p>
             </div>
             <div class="py-6 flex items-center justify-center">

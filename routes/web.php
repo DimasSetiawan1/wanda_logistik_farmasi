@@ -6,7 +6,6 @@ use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\DemandDataController;
 use App\Http\Controllers\EoqController;
 use App\Http\Controllers\MinMaxController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserManagementController;
@@ -28,30 +27,23 @@ Route::middleware(['auth'])->group(function () {
     // Master Obat
     Route::resource('medicines', MedicineController::class);
 
-    // Data Permintaan
+    // Data Pemakaian / Permintaan
     Route::resource('demand-data', DemandDataController::class)->parameters([
         'demand-data' => 'demandDatum',
     ]);
 
-    // Fase 1: EOQ
+    // Optimasi Stok
     Route::get('eoq', [EoqController::class, 'index'])->name('eoq.index');
     Route::post('eoq/calculate', [EoqController::class, 'calculate'])->name('eoq.calculate');
     Route::post('eoq/calculate-all', [EoqController::class, 'calculateAll'])->name('eoq.calculateAll');
     Route::get('eoq/result', [EoqController::class, 'result'])->name('eoq.result');
 
-    // Fase 2: Min-Max Stock
+    // Batas Persediaan
     Route::get('minmax', [MinMaxController::class, 'index'])->name('minmax.index');
     Route::get('minmax/result', [MinMaxController::class, 'result'])->name('minmax.result');
     Route::get('minmax/monitoring', [MinMaxController::class, 'monitoring'])->name('minmax.monitoring');
 
-    // Pemesanan
-    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::post('orders/auto', [OrderController::class, 'autoOrder'])->name('orders.auto');
-    Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
-    Route::delete('orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
-
-    // Fase 3: Evaluasi
+    // Evaluasi & Prioritas
     Route::get('evaluation/abc', [EvaluationController::class, 'abcAnalysis'])->name('evaluation.abc');
     Route::get('evaluation/eoq', [EvaluationController::class, 'eoqEvaluation'])->name('evaluation.eoq');
     Route::get('evaluation/periodic', [EvaluationController::class, 'periodicReview'])->name('evaluation.periodic');

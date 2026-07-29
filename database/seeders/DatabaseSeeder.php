@@ -14,9 +14,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // =====================
-        // 1. USERS
-        // =====================
-        // =====================
         // 1. USERS (3 Roles)
         // =====================
         User::create([
@@ -47,26 +44,26 @@ class DatabaseSeeder extends Seeder
         // 2. MEDICINES (20 obat)
         // =====================
         $medicines = [
-            ['kode_obat' => 'OBT001', 'nama_obat' => 'Amoxicillin 500mg', 'kategori_obat' => 'Antibiotik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 1500, 'stok_aktual' => 320],
-            ['kode_obat' => 'OBT002', 'nama_obat' => 'Paracetamol 500mg', 'kategori_obat' => 'Analgesik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 800, 'stok_aktual' => 450],
-            ['kode_obat' => 'OBT003', 'nama_obat' => 'Omeprazole 20mg', 'kategori_obat' => 'Obat Lambung', 'satuan' => 'Kapsul', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 3200, 'stok_aktual' => 180],
-            ['kode_obat' => 'OBT004', 'nama_obat' => 'Metformin 500mg', 'kategori_obat' => 'Antidiabetes', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 1200, 'stok_aktual' => 280],
-            ['kode_obat' => 'OBT005', 'nama_obat' => 'Amlodipine 5mg', 'kategori_obat' => 'Antihipertensi', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 2500, 'stok_aktual' => 200],
-            ['kode_obat' => 'OBT006', 'nama_obat' => 'Ciprofloxacin 500mg', 'kategori_obat' => 'Antibiotik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 4500, 'stok_aktual' => 150],
-            ['kode_obat' => 'OBT007', 'nama_obat' => 'Ranitidine 150mg', 'kategori_obat' => 'Obat Lambung', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 1800, 'stok_aktual' => 260],
-            ['kode_obat' => 'OBT008', 'nama_obat' => 'Ceftriaxone 1g Inj', 'kategori_obat' => 'Injeksi / Antibiotik', 'satuan' => 'Vial', 'tingkat_pemakaian' => 'Jarang', 'kategori' => 'C', 'harga_per_unit' => 35000, 'stok_aktual' => 50],
-            ['kode_obat' => 'OBT009', 'nama_obat' => 'NaCl 0.9% 500ml', 'kategori_obat' => 'Cairan Infus', 'satuan' => 'Botol', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 12000, 'stok_aktual' => 120],
-            ['kode_obat' => 'OBT010', 'nama_obat' => 'Dexamethasone 0.5mg', 'kategori_obat' => 'Kortikosteroid', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 900, 'stok_aktual' => 380],
-            ['kode_obat' => 'OBT011', 'nama_obat' => 'Ketorolac 30mg Inj', 'kategori_obat' => 'Injeksi / Analgesik', 'satuan' => 'Ampul', 'tingkat_pemakaian' => 'Jarang', 'kategori' => 'C', 'harga_per_unit' => 15000, 'stok_aktual' => 75],
-            ['kode_obat' => 'OBT012', 'nama_obat' => 'Metronidazole 500mg', 'kategori_obat' => 'Antibiotik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 2000, 'stok_aktual' => 220],
-            ['kode_obat' => 'OBT013', 'nama_obat' => 'Lansoprazole 30mg', 'kategori_obat' => 'Obat Lambung', 'satuan' => 'Kapsul', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 3500, 'stok_aktual' => 160],
-            ['kode_obat' => 'OBT014', 'nama_obat' => 'Diazepam 5mg', 'satuan' => 'Tablet', 'kategori_obat' => 'Sedatif', 'tingkat_pemakaian' => 'Jarang', 'kategori' => 'C', 'harga_per_unit' => 2800, 'stok_aktual' => 90],
-            ['kode_obat' => 'OBT015', 'nama_obat' => 'Ondansetron 4mg Inj', 'kategori_obat' => 'Injeksi / Antiemetik', 'satuan' => 'Ampul', 'tingkat_pemakaian' => 'Jarang', 'kategori' => 'C', 'harga_per_unit' => 18000, 'stok_aktual' => 60],
-            ['kode_obat' => 'OBT016', 'nama_obat' => 'Ringer Laktat 500ml', 'kategori_obat' => 'Cairan Infus', 'satuan' => 'Botol', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 11500, 'stok_aktual' => 130],
-            ['kode_obat' => 'OBT017', 'nama_obat' => 'Asam Mefenamat 500mg', 'kategori_obat' => 'Analgesik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 1000, 'stok_aktual' => 350],
-            ['kode_obat' => 'OBT018', 'nama_obat' => 'Captopril 25mg', 'kategori_obat' => 'Antihipertensi', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 1100, 'stok_aktual' => 300],
-            ['kode_obat' => 'OBT019', 'nama_obat' => 'Salbutamol 2mg', 'kategori_obat' => 'Obat Asma', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 950, 'stok_aktual' => 270],
-            ['kode_obat' => 'OBT020', 'nama_obat' => 'Vitamin B Complex', 'kategori_obat' => 'Vitamin', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 600, 'stok_aktual' => 500],
+            ['kode_obat' => 'OBT001', 'nama_obat' => 'Amoxicillin 500mg', 'kategori_obat' => 'Antibiotik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 1500, 'stok_aktual' => 320, 'tanggal_kadaluarsa' => '2026-12-31'],
+            ['kode_obat' => 'OBT002', 'nama_obat' => 'Paracetamol 500mg', 'kategori_obat' => 'Analgesik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 800, 'stok_aktual' => 450, 'tanggal_kadaluarsa' => '2027-05-20'],
+            ['kode_obat' => 'OBT003', 'nama_obat' => 'Omeprazole 20mg', 'kategori_obat' => 'Obat Lambung', 'satuan' => 'Kapsul', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 3200, 'stok_aktual' => 180, 'tanggal_kadaluarsa' => '2026-08-15'],
+            ['kode_obat' => 'OBT004', 'nama_obat' => 'Metformin 500mg', 'kategori_obat' => 'Antidiabetes', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 1200, 'stok_aktual' => 280, 'tanggal_kadaluarsa' => '2026-11-10'],
+            ['kode_obat' => 'OBT005', 'nama_obat' => 'Amlodipine 5mg', 'kategori_obat' => 'Antihipertensi', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 2500, 'stok_aktual' => 200, 'tanggal_kadaluarsa' => '2027-01-25'],
+            ['kode_obat' => 'OBT006', 'nama_obat' => 'Ciprofloxacin 500mg', 'kategori_obat' => 'Antibiotik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 4500, 'stok_aktual' => 150, 'tanggal_kadaluarsa' => '2026-09-30'],
+            ['kode_obat' => 'OBT007', 'nama_obat' => 'Ranitidine 150mg', 'kategori_obat' => 'Obat Lambung', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 1800, 'stok_aktual' => 260, 'tanggal_kadaluarsa' => '2026-10-18'],
+            ['kode_obat' => 'OBT008', 'nama_obat' => 'Ceftriaxone 1g Inj', 'kategori_obat' => 'Injeksi / Antibiotik', 'satuan' => 'Vial', 'tingkat_pemakaian' => 'Jarang', 'kategori' => 'C', 'harga_per_unit' => 35000, 'stok_aktual' => 50, 'tanggal_kadaluarsa' => '2026-07-01'],
+            ['kode_obat' => 'OBT009', 'nama_obat' => 'NaCl 0.9% 500ml', 'kategori_obat' => 'Cairan Infus', 'satuan' => 'Botol', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 12000, 'stok_aktual' => 120, 'tanggal_kadaluarsa' => '2027-03-14'],
+            ['kode_obat' => 'OBT010', 'nama_obat' => 'Dexamethasone 0.5mg', 'kategori_obat' => 'Kortikosteroid', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 900, 'stok_aktual' => 380, 'tanggal_kadaluarsa' => '2027-06-30'],
+            ['kode_obat' => 'OBT011', 'nama_obat' => 'Ketorolac 30mg Inj', 'kategori_obat' => 'Injeksi / Analgesik', 'satuan' => 'Ampul', 'tingkat_pemakaian' => 'Jarang', 'kategori' => 'C', 'harga_per_unit' => 15000, 'stok_aktual' => 75, 'tanggal_kadaluarsa' => '2026-12-12'],
+            ['kode_obat' => 'OBT012', 'nama_obat' => 'Metronidazole 500mg', 'kategori_obat' => 'Antibiotik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 2000, 'stok_aktual' => 220, 'tanggal_kadaluarsa' => '2027-02-28'],
+            ['kode_obat' => 'OBT013', 'nama_obat' => 'Lansoprazole 30mg', 'kategori_obat' => 'Obat Lambung', 'satuan' => 'Kapsul', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 3500, 'stok_aktual' => 160, 'tanggal_kadaluarsa' => '2026-11-22'],
+            ['kode_obat' => 'OBT014', 'nama_obat' => 'Diazepam 5mg', 'kategori_obat' => 'Sedatif', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Jarang', 'kategori' => 'C', 'harga_per_unit' => 2800, 'stok_aktual' => 90, 'tanggal_kadaluarsa' => '2026-08-05'],
+            ['kode_obat' => 'OBT015', 'nama_obat' => 'Ondansetron 4mg Inj', 'kategori_obat' => 'Injeksi / Antiemetik', 'satuan' => 'Ampul', 'tingkat_pemakaian' => 'Jarang', 'kategori' => 'C', 'harga_per_unit' => 18000, 'stok_aktual' => 60, 'tanggal_kadaluarsa' => '2026-10-10'],
+            ['kode_obat' => 'OBT016', 'nama_obat' => 'Ringer Laktat 500ml', 'kategori_obat' => 'Cairan Infus', 'satuan' => 'Botol', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 11500, 'stok_aktual' => 130, 'tanggal_kadaluarsa' => '2027-04-15'],
+            ['kode_obat' => 'OBT017', 'nama_obat' => 'Asam Mefenamat 500mg', 'kategori_obat' => 'Analgesik', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 1000, 'stok_aktual' => 350, 'tanggal_kadaluarsa' => '2027-07-20'],
+            ['kode_obat' => 'OBT018', 'nama_obat' => 'Captopril 25mg', 'kategori_obat' => 'Antihipertensi', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 1100, 'stok_aktual' => 300, 'tanggal_kadaluarsa' => '2026-09-01'],
+            ['kode_obat' => 'OBT019', 'nama_obat' => 'Salbutamol 2mg', 'kategori_obat' => 'Obat Asma', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sering', 'kategori' => 'C', 'harga_per_unit' => 950, 'stok_aktual' => 270, 'tanggal_kadaluarsa' => '2026-12-05'],
+            ['kode_obat' => 'OBT020', 'nama_obat' => 'Vitamin B Complex', 'kategori_obat' => 'Vitamin', 'satuan' => 'Tablet', 'tingkat_pemakaian' => 'Sangat Sering', 'kategori' => 'C', 'harga_per_unit' => 600, 'stok_aktual' => 500, 'tanggal_kadaluarsa' => '2027-08-30'],
         ];
 
         foreach ($medicines as $med) {
@@ -82,7 +79,6 @@ class DatabaseSeeder extends Seeder
             'September 2025', 'Oktober 2025', 'November 2025', 'Desember 2025',
         ];
 
-        // Rata-rata permintaan per bulan per obat (variasi realistis)
         $demandBase = [
             1 => 250, 2 => 400, 3 => 180, 4 => 200, 5 => 220,
             6 => 150, 7 => 190, 8 => 80,  9 => 300, 10 => 280,
@@ -94,7 +90,6 @@ class DatabaseSeeder extends Seeder
         foreach ($allMedicines as $medicine) {
             $base = $demandBase[$medicine->id] ?? 150;
             foreach ($periodes as $periode) {
-                // Variasi ±20%
                 $variation = $base * (rand(80, 120) / 100);
                 DemandData::create([
                     'medicine_id' => $medicine->id,
@@ -108,7 +103,6 @@ class DatabaseSeeder extends Seeder
         // 4. EOQ PARAMETERS
         // =====================
         $eoqParams = [
-            // medicine_id => [D_tahunan, biaya_pesan, biaya_simpan, faktor_simpan, lead_time, Z]
             1  => [3000,  25000, 150,  0.10, 5, 1.65],
             2  => [4800,  20000, 80,   0.10, 3, 1.65],
             3  => [2160,  30000, 320,  0.10, 7, 1.65],

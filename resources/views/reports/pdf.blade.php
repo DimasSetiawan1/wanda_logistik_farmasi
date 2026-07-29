@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Laporan EOQ & Min-Max — RS Puspa Husada Bekasi</title>
+    <title>Laporan Logistik Farmasi — RS Puspa Husada Bekasi</title>
     <style>
         * {
             margin: 0;
@@ -40,7 +40,7 @@
         }
 
         .section-title {
-            background: #2563eb;
+            background: #04aabe;
             color: #fff;
             padding: 5px 10px;
             margin: 15px 0 8px;
@@ -90,8 +90,8 @@
 
         .badge-a { background: #dc2626; }
         .badge-b { background: #d97706; }
-        .badge-c { background: #059669; }
-        .badge-normal { background: #059669; }
+        .badge-c { background: #04aabe; }
+        .badge-normal { background: #04aabe; }
         .badge-perlu_pesan { background: #dc2626; }
         .badge-overstock { background: #d97706; }
 
@@ -110,7 +110,7 @@
             border: none;
             text-align: center;
             padding-top: 60px;
-            width: 33%;
+            width: 50%;
             vertical-align: top;
         }
 
@@ -130,13 +130,13 @@
     <!-- Header -->
     <div class="header">
         <h2>RS PUSPA HUSADA BEKASI</h2>
-        <h3>Laporan Rekomendasi EOQ & Batas Min-Max Stock</h3>
-        <p>Implementasi Economic Order Quantity dan Min-Max Stock dalam Manajemen Logistik Farmasi</p>
+        <h3>Laporan Rekomendasi Kuantitas & Batas Stok Persediaan</h3>
+        <p>Hasil Perhitungan Optimalisasi dan Prioritas Persediaan Logistik Farmasi</p>
         <p>Dicetak: {{ $tanggalCetak }}</p>
     </div>
 
-    <!-- Tabel 1: Hasil Perhitungan EOQ -->
-    <div class="section-title">Tabel 1 — Hasil Perhitungan EOQ (Economic Order Quantity)</div>
+    <!-- Tabel 1: Kuantitas Pemesanan Optimal -->
+    <div class="section-title">Tabel 1 — Hasil Perhitungan Kuantitas Pemesanan Optimal</div>
     <table>
         <thead>
             <tr>
@@ -147,7 +147,7 @@
                 <th class="text-right">D</th>
                 <th class="text-right">S (Rp)</th>
                 <th class="text-right">H (Rp)</th>
-                <th class="text-right">EOQ*</th>
+                <th class="text-right">Kuantitas Optimal</th>
                 <th class="text-right">F</th>
                 <th class="text-right">TC (Rp)</th>
             </tr>
@@ -173,7 +173,7 @@
     </table>
 
     <!-- Tabel 2: Batas Min-Max -->
-    <div class="section-title">Tabel 2 — Penetapan Batas Stok Min-Max</div>
+    <div class="section-title">Tabel 2 — Penetapan Batas Stok Minimum & Maksimum</div>
     <table>
         <thead>
             <tr>
@@ -199,7 +199,7 @@
                     <td class="text-right">{{ number_format($calc->stok_maksimum, 0) }}</td>
                     <td class="text-center">
                         <span class="badge badge-{{ $calc->status }}">
-                            {{ $calc->status === 'perlu_pesan' ? 'Perlu Pesan' : ($calc->status === 'overstock' ? 'Overstock' : 'Normal') }}
+                            {{ $calc->status === 'perlu_pesan' ? 'Stok Kritis' : ($calc->status === 'overstock' ? 'Overstock' : 'Normal') }}
                         </span>
                     </td>
                 </tr>
@@ -207,9 +207,9 @@
         </tbody>
     </table>
 
-    <!-- Tabel 3: Analisis ABC -->
+    <!-- Tabel 3: Prioritas Kategori -->
     @if($abcData->count() > 0)
-    <div class="section-title">Tabel 3 — Analisis ABC</div>
+    <div class="section-title">Tabel 3 — Klasifikasi Prioritas Stok</div>
     <table>
         <thead>
             <tr>
@@ -242,7 +242,7 @@
     </table>
 
     <p style="margin-top: 5px; font-size: 8pt; color: #666;">
-        Kategori A: 0-70% (High Value) | Kategori B: 70-90% (Medium Value) | Kategori C: 90-100% (Low Value)
+        Kategori A: 0-70% (Investasi Tinggi) | Kategori B: 70-90% (Investasi Sedang) | Kategori C: 90-100% (Investasi Rendah)
     </p>
     @endif
 
@@ -258,7 +258,7 @@
                 </td>
                 <td>
                     Bekasi, {{ $tanggalCetak }}<br>
-                    <strong>Penanggung Jawab</strong><br><br><br><br>
+                    <strong>Penanggung Jawab Logistik</strong><br><br><br><br>
                     <div class="signature-line"></div><br>
                     NIP. ____________________
                 </td>

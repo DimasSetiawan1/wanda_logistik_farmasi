@@ -44,6 +44,7 @@ class MedicineController extends Controller
             'kategori' => 'nullable|in:A,B,C',
             'harga_per_unit' => 'nullable|numeric|min:0',
             'stok_aktual' => 'nullable|integer|min:0',
+            'tanggal_kadaluarsa' => 'nullable|date',
         ]);
 
         $data = $request->all();
@@ -73,6 +74,7 @@ class MedicineController extends Controller
             'kategori' => 'nullable|in:A,B,C',
             'harga_per_unit' => 'nullable|numeric|min:0',
             'stok_aktual' => 'nullable|integer|min:0',
+            'tanggal_kadaluarsa' => 'nullable|date',
         ]);
 
         $data = $request->all();

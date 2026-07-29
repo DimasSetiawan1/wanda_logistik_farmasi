@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Hasil Min-Max Stock')
+@section('title', 'Hasil Batas Persediaan')
 
 @section('breadcrumb')
     <span>/</span>
-    <span class="text-[#04aabe] font-semibold">Hasil Min-Max Stock</span>
+    <span class="text-[#04aabe] font-semibold">Hasil Batas Persediaan</span>
 @endsection
 
 @section('content')
@@ -14,7 +14,7 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-chart-column text-[#04aabe]"></i>
-                <span>Penetapan Batas Stok Min-Max</span>
+                <span>Penetapan Batas Stok Minimum & Maksimum</span>
             </h2>
             <p class="text-xs text-slate-500 mt-1">Hasil kalkulasi Stok Pengaman, Titik Pemesanan Kembali, Stok Minimum & Maksimum</p>
         </div>
@@ -55,7 +55,7 @@
                             <td class="py-4 px-5 text-center">
                                 @if($calc->status === 'perlu_pesan')
                                     <span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-triangle-exclamation"></i> Perlu Pesan
+                                        <i class="fa-solid fa-triangle-exclamation"></i> Kritis
                                     </span>
                                 @elseif($calc->status === 'overstock')
                                     <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
@@ -71,7 +71,7 @@
                     @empty
                         <tr>
                             <td colspan="9" class="py-8 text-center text-slate-400">
-                                Belum ada kalkulasi stok. <a href="{{ route('eoq.index') }}" class="text-[#04aabe] font-bold underline">Hitung Parameter EOQ Dulu</a>
+                                Belum ada kalkulasi stok. <a href="{{ route('eoq.index') }}" class="text-[#04aabe] font-bold underline">Hitung Parameter Dulu</a>
                             </td>
                         </tr>
                     @endforelse

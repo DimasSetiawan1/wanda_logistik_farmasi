@@ -176,7 +176,7 @@
 
         <!-- Footer -->
         <footer class="bg-white border-t border-slate-200 px-6 py-4 text-center text-xs text-slate-500">
-            &copy; {{ date('Y') }} RS Puspa Husada Bekasi — Sistem Informasi Manajemen Logistik Farmasi (Metode EOQ & Min-Max Stock)
+            &copy; {{ date('Y') }} RS Puspa Husada Bekasi — Sistem Informasi Manajemen Logistik Farmasi
         </footer>
     </div>
 

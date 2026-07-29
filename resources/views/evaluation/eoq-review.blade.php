@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Evaluasi EOQ')
+@section('title', 'Evaluasi Efisiensi Stok')
 
 @section('breadcrumb')
     <span>/</span>
-    <span class="text-[#04aabe] font-semibold">Evaluasi Efisiensi EOQ</span>
+    <span class="text-[#04aabe] font-semibold">Evaluasi Efisiensi Stok</span>
 @endsection
 
 @section('content')
@@ -16,20 +16,20 @@
                 <i class="fa-solid fa-scale-balanced text-[#04aabe]"></i>
                 <span>Evaluasi Perbandingan Biaya Persediaan</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-1">Perbandingan efisiensi pengeluaran anggaran antara penerapan metode EOQ vs pemesanan tanpa EOQ</p>
+            <p class="text-xs text-slate-500 mt-1">Perbandingan efisiensi pengeluaran anggaran antara penerapan pemesanan teroptimasi vs konvensional</p>
         </div>
     </div>
 
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm text-center">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Biaya Dengan EOQ</p>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Biaya Teroptimasi</p>
             <h3 class="text-2xl font-black text-[#04aabe] mt-1">Rp {{ number_format($totalBiayaEoq, 0, ',', '.') }}</h3>
             <span class="inline-block mt-1 text-[11px] text-[#04aabe] font-bold bg-brand-50 px-2.5 py-0.5 rounded-md">Optimal & Efisien</span>
         </div>
 
         <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm text-center">
-            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Biaya Tanpa EOQ</p>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Biaya Konvensional</p>
             <h3 class="text-2xl font-black text-rose-600 mt-1">Rp {{ number_format($totalBiayaTanpaEoq, 0, ',', '.') }}</h3>
             <span class="inline-block mt-1 text-[11px] text-rose-700 font-bold bg-rose-50 px-2.5 py-0.5 rounded-md">Pemesanan Konvensional</span>
         </div>
@@ -57,7 +57,7 @@
         <!-- Table -->
         <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
             <div class="p-6 border-b border-slate-100">
-                <h3 class="text-base font-bold text-slate-800">Rincian Hasil EOQ Per Obat</h3>
+                <h3 class="text-base font-bold text-slate-800">Rincian Kuantitas Optimal Per Obat</h3>
                 <p class="text-xs text-slate-500 mt-1">Nilai kuantitas optimal dan total biaya per item</p>
             </div>
             <div class="flex-1 overflow-y-auto max-h-80 custom-scrollbar">
@@ -65,7 +65,7 @@
                     <thead class="sticky top-0 bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 z-10">
                         <tr>
                             <th class="py-3 px-5">Nama Obat</th>
-                            <th class="py-3 px-5 text-right">Kuantitas Optimal (EOQ)</th>
+                            <th class="py-3 px-5 text-right">Kuantitas Optimal</th>
                             <th class="py-3 px-5 text-right">Total Biaya (TC)</th>
                         </tr>
                     </thead>
@@ -90,7 +90,7 @@
     new Chart(document.getElementById('costChart').getContext('2d'), {
         type: 'bar',
         data: {
-            labels: ['Dengan Metode EOQ', 'Tanpa Metode EOQ'],
+            labels: ['Pemesanan Teroptimasi', 'Pemesanan Konvensional'],
             datasets: [{
                 label: 'Total Biaya (Rp)',
                 data: [{{ $totalBiayaEoq }}, {{ $totalBiayaTanpaEoq }}],

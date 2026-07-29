@@ -1,12 +1,75 @@
 # Logistik Farmasi RS Puspa Husada Bekasi
 
-Sistem Informasi Manajemen Logistik Farmasi menggunakan metode **Economic Order Quantity (EOQ)** dan **Min-Max Stock**.
+Sistem Informasi Manajemen Logistik Farmasi RS Puspa Husada Bekasi untuk pengamanan dan optimasi persediaan obat menggunakan metode **Economic Order Quantity (EOQ)** dan **Min-Max Stock**.
+
+---
+
+## 🔄 Alur Operasional Logistik Farmasi (Instalasi Farmasi hingga Kepala Instalasi)
+
+Alur proses bisnis berjalan dari pencatatan pemakaian/permintaan di tingkat Instalasi Farmasi, kalkulasi stok teroptimasi oleh sistem, hingga evaluasi dan persetujuan resmi oleh Kepala Instalasi Farmasi.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor IF as Petugas Instalasi Farmasi
+    participant SYS as Sistem Logistik Farmasi
+    actor ADM as Admin Logistik
+    actor KIF as Kepala Instalasi Farmasi
+
+    rect rgb(240, 250, 251)
+    note over IF, SYS: Tahap 1: Pencatatan Pemakaian / Permintaan Obat
+    IF->>SYS: Input Data Pemakaian (Nama Obat, Periode, Jumlah)
+    SYS->>SYS: Pengurangan Stok Aktual Otomatis (stok_aktual - Qty)
+    SYS-->>IF: Konfirmasi Pemakaian Tersimpan & Stok Berkurang
+    end
+
+    rect rgb(248, 250, 252)
+    note over ADM, SYS: Tahap 2: Kalkulasi Optimasi & Monitoring Persediaan
+    SYS->>SYS: Evaluasi Stok (stok_aktual <= stok_minimum ?)
+    alt Stok <= Stok Minimum
+        SYS->>SYS: Tandai Status Obat = Kritis (Perlu Pesan)
+    end
+    ADM->>SYS: Input/Update Parameter Optimasi (D, S, H, Lead Time, Service Level)
+    SYS->>SYS: Hitung Kuantitas Optimal, SS, ROP, Min, Max & Kategori Prioritas
+    SYS-->>ADM: Tampilkan Hasil Optimasi & Visualisasi Status Stok
+    end
+
+    rect rgb(240, 253, 250)
+    note over KIF, SYS: Tahap 3: Peninjauan, Evaluasi & Persetujuan Kepala Instalasi
+    KIF->>SYS: Akses Laporan Output Logistik & Monitoring Stok
+    SYS-->>KIF: Tampilkan Rangkuman Stok Kritis & Rekomendasi Kuantitas
+    KIF->>SYS: Peninjauan & Evaluasi Efisiensi Anggaran Persediaan
+    KIF->>SYS: Cetak / Pengesahan Laporan PDF Logistik Farmasi
+    SYS-->>KIF: Laporan Logistik Terverifikasi & Disetujui (Siap Pengadaan)
+    end
+```
+
+### Rincian Tahapan Alur:
+
+1. **Tahap 1: Input Data Pemakaian oleh Instalasi Farmasi (`instalasi_farmasi`)**
+    - Petugas Instalasi Farmasi menginputkan transaksi pemakaian obat harian/bulanan pada menu **Data Pemakaian**.
+    - Setiap transaksi yang berhasil disimpan akan **secara otomatis mengurangi `stok_aktual` obat** pada database.
+    - Apabila terdapat koreksi/perubahan data pemakaian, stok akan dikembalikan/dibereskan secara otomatis oleh sistem.
+
+2. **Tahap 2: Pemantauan Stok & Parameter Optimasi oleh Admin (`admin`)**
+    - Admin memantau kondisi persediaan riil pada menu **Monitoring Batas Stok**. Jika `stok_aktual` turun di bawah `stok_minimum`, obat otomatis berstatus **Stok Kritis**.
+    - Admin mengelola master data obat (termasuk input **Tanggal Kadaluarsa / Expired Date**).
+    - Admin memasukkan parameter operasional (Permintaan $D$, Biaya Pesan $S$, Biaya Simpan $H$, $Lead Time$, $Service Level$) pada menu **Parameter Optimasi Stok**.
+    - Sistem secara otomatis menghitung kuantitas optimal pemesanan, titik pemesanan ulang (ROP), stok pengaman (Safety Stock), serta mengklasifikasikan prioritas persediaan.
+
+3. **Tahap 3: Peninjauan & Persetujuan oleh Kepala Instalasi Farmasi (`kepala_instalasi`)**
+    - Kepala Instalasi Farmasi masuk ke sistem untuk meninjau status ketersediaan obat dan daftar item berstatus **Stok Kritis**.
+    - Kepala Instalasi memeriksa halaman **Evaluasi Efisiensi Stok** dan **Prioritas Kategori Stok** untuk memastikan efisiensi anggaran logistik.
+    - Kepala Instalasi membuka menu **Laporan Sistem** dan mengunduh / mencetak **Laporan PDF Output Logistik Farmasi**.
+    - Kepala Instalasi memberikan **Persetujuan Resmi (Approval)** berupa penandatanganan dokumen Laporan Logistik Farmasi sebagai dasar rujukan pengadaan obat rumah sakit.
+
+---
 
 ## 📊 Breakdown Perhitungan dan Lokasi File
 
 Semua logika perhitungan utama diletakkan pada layer Service, terpisah dari Controller, agar kode lebih rapi dan dapat digunakan ulang (reusable).
 
-### 1. Perhitungan EOQ (Economic Order Quantity)
+### 1. Perhitungan Kuantitas Pemesanan Optimal (EOQ)
 
 **Lokasi File:** `app/Services/EoqCalculationService.php` (pada method `calculate()`)
 
@@ -21,9 +84,9 @@ Perhitungan dilakukan untuk mencari kuantitas pemesanan yang paling optimal deng
 
 **Rumus yang Diimplementasikan:**
 
-1. **EOQ (Kuantitas Pemesanan Optimal)**
+1. **Kuantitas Pemesanan Optimal**
    $$EOQ^* = \sqrt{\frac{2 \times D \times S}{H}}$$
-   _(Baris kode: `$eoqValue = sqrt((2 _ $D _ $S) / $H);`)_
+   _(Baris kode: `$eoqValue = sqrt((2 * $D * $S) / $H);`)_
 
 2. **Frekuensi Pemesanan (F)**
    $$F = \frac{D}{EOQ^*}$$
@@ -35,7 +98,7 @@ Perhitungan dilakukan untuk mencari kuantitas pemesanan yang paling optimal deng
 
 ---
 
-### 2. Perhitungan Min-Max Stock
+### 2. Perhitungan Batas Persediaan (Min-Max Stock)
 
 **Lokasi File:** `app/Services/EoqCalculationService.php` (pada method `calculate()`)
 
@@ -60,7 +123,7 @@ Digunakan untuk menentukan batas stok aman, titik pemesanan kembali (Reorder Poi
 
 3. **Stok Minimum (Min)**
    $$Min = SS + (d \times LT)$$
-   _(Batas paling bawah jumlah stok. Sistem akan menandai status "Perlu Pesan" jika stok aktual $\le$ Min)_
+   _(Batas paling bawah jumlah stok. Sistem akan menandai status "Kritis" jika stok aktual $\le$ Min)_
 
 4. **Stok Maksimum (Max)**
    $$Max = Min + EOQ^*$$
@@ -68,7 +131,7 @@ Digunakan untuk menentukan batas stok aman, titik pemesanan kembali (Reorder Poi
 
 ---
 
-### 3. Analisis ABC (Evaluasi Persediaan)
+### 3. Klasifikasi Prioritas Stok (Analisis ABC)
 
 **Lokasi File:** `app/Services/AbcAnalysisService.php` (pada method `analyze()`)
 
@@ -83,44 +146,42 @@ Metode klasifikasi persediaan berdasarkan nilai penyerapan modal atau nilai pema
    $$\text{Persentase} = \left(\frac{\text{Nilai Pakai Obat}}{\text{Total Seluruh Nilai Pakai}}\right) \times 100\%$$
    Kemudian hitung kumulatif atau jumlah beruntun dari persentase tersebut.
 4. **Klasifikasi ke dalam Kategori A, B, atau C:**
-    - **Kategori A**: Persentase kumulatif 0% s/d 70% (Item sangat penting, butuh kontrol ketat, pesanan EOQ dengan frekuensi lebih sering).
+    - **Kategori A**: Persentase kumulatif 0% s/d 70% (Item sangat penting, butuh kontrol ketat).
     - **Kategori B**: Persentase kumulatif >70% s/d 90% (Item moderat/sedang).
-    - **Kategori C**: Persentase kumulatif >90% s/d 100% (Item kurang penting, volume banyak tapi nilai totalnya kecil).
+    - **Kategori C**: Persentase kumulatif >90% s/d 100% (Item pendukung).
 
 ---
 
-## 📂 Struktur Folder Penting Lainnya
+## 📂 Struktur Folder Penting
 
 - **Models**: `app/Models/`
-    - `Medicine.php`: Data Master Obat
-    - `DemandData.php`: Data Historis Permintaan Obat
-    - `EoqParameter.php`: Parameter (D, S, H, LT, Z) yang di-input pengguna
-    - `EoqCalculation.php`: Menyimpan hasil perhitungan (EOQ\*, SS, ROP, Min, Max)
-    - `Order.php`: Data pemesanan
+    - `Medicine.php`: Data Master Obat & Tanggal Kadaluarsa
+    - `DemandData.php`: Data Historis Pemakaian / Permintaan Obat
+    - `EoqParameter.php`: Parameter ($D, S, H, LT, Z$)
+    - `EoqCalculation.php`: Menyimpan hasil perhitungan (Kuantitas Optimal, SS, ROP, Min, Max, Status)
+    - `User.php`: Pengguna Aplikasi (`admin`, `instalasi_farmasi`, `kepala_instalasi`)
 - **Controllers**: `app/Http/Controllers/`
-    - Controller untuk mengatur alur dari route ke view, memanggil Service saat dibutuhkan perhitungan.
+    - Controller mengatur aliran data dari route ke view serta memanggil Service kalkulasi.
 - **Views**: `resources/views/`
-    - Menggunakan UI berbasis **Bootstrap 5**.
-- **Migrations & Seeders**: `database/migrations/` dan `database/seeders/DatabaseSeeder.php`
+    - Menggunakan antarmuka responsif modern berbasis **Tailwind CSS**.
 
 ---
 
-## 🗄️ Detail Database Schema & Relasi (Untuk Class Diagram)
+## 🗄️ Detail Database Schema & Relasi (Untuk Class Diagram & ERD)
 
-Berikut adalah rincian tabel, atribut, dan relasi antar tabel (models) pada sistem Logistik Farmasi ini. Struktur ini dapat digunakan sebagai acuan pembuatan Class Diagram atau ERD (Entity Relationship Diagram).
+Struktur tabel, atribut, dan relasi pada sistem Logistik Farmasi RS Puspa Husada:
 
 ### 1. Tabel `users`
 
-Menyimpan data pengguna aplikasi (Apoteker & Admin).
+Menyimpan data pengguna aplikasi dengan 3 role terpisah.
 
 - **Atribut:**
     - `id` (PK, BigInt)
     - `name` (String)
-    - `email` (String, Unique)
+    - `username` (String, Unique)
     - `password` (String)
-    - `role` (Enum: 'admin', 'apoteker')
+    - `role` (Enum: `'admin'`, `'instalasi_farmasi'`, `'kepala_instalasi'`)
     - `created_at`, `updated_at` (Timestamp)
-- **Relasi:** Tidak memiliki relasi langsung dengan tabel transaksi, murni untuk autentikasi dan otorisasi.
 
 ### 2. Tabel `medicines`
 
@@ -130,33 +191,34 @@ Menyimpan data master/katalog obat.
     - `id` (PK, BigInt)
     - `kode_obat` (String, Unique)
     - `nama_obat` (String)
-    - `satuan` (String) - _Contoh: Box, Botol, Strip_
-    - `kategori` (String)
+    - `kategori_obat` (String)
+    - `satuan` (String) - _Contoh: Tablet, Botol, Strip, Box_
+    - `tingkat_pemakaian` (Enum: `'Sangat Sering'`, `'Sering'`, `'Jarang'`)
     - `harga_per_unit` (Decimal)
     - `stok_aktual` (Integer)
+    - `tanggal_kadaluarsa` (Date, Nullable) - _Tanggal kadaluarsa obat (Expired Date)_
     - `created_at`, `updated_at` (Timestamp)
 - **Relasi:**
-    - `hasMany` ke `demand_data` (Satu obat memiliki banyak data historis permintaan).
-    - `hasMany` ke `eoq_parameters` (Satu obat bisa memiliki banyak riwayat input parameter EOQ).
-    - `hasMany` ke `eoq_calculations` (Satu obat memiliki banyak riwayat perhitungan EOQ).
-    - `hasMany` ke `orders` (Satu obat memiliki banyak riwayat pemesanan).
+    - `hasMany` ke `demand_data` (Satu obat memiliki banyak riwayat pemakaian/permintaan).
+    - `hasMany` ke `eoq_parameters` (Satu obat memiliki riwayat input parameter persediaan).
+    - `hasMany` ke `eoq_calculations` (Satu obat memiliki riwayat perhitungan persediaan).
 
 ### 3. Tabel `demand_data`
 
-Menyimpan data riwayat permintaan/pemakaian obat bulanan (digunakan untuk meramalkan/menghitung rata-rata permintaan).
+Menyimpan data riwayat pemakaian/permintaan obat bulanan dari Instalasi Farmasi.
 
 - **Atribut:**
     - `id` (PK, BigInt)
     - `medicine_id` (FK, BigInt) - _Merujuk ke `medicines.id`_
-    - `periode` (String) - _Contoh: '2023-01' atau 'Januari 2023'_
+    - `periode` (String) - _Contoh: 'Januari 2025'_
     - `jumlah_permintaan` (Integer)
     - `created_at`, `updated_at` (Timestamp)
 - **Relasi:**
-    - `belongsTo` ke `medicines` (Data permintaan ini milik satu obat tertentu).
+    - `belongsTo` ke `medicines`.
 
 ### 4. Tabel `eoq_parameters`
 
-Menyimpan variabel/parameter masukan yang dibutuhkan untuk menghitung EOQ dan Min-Max Stock sebuah obat.
+Menyimpan variabel/parameter masukan yang dibutuhkan untuk menghitung Kuantitas Pemesanan Optimal dan Batas Persediaan.
 
 - **Atribut:**
     - `id` (PK, BigInt)
@@ -164,46 +226,31 @@ Menyimpan variabel/parameter masukan yang dibutuhkan untuk menghitung EOQ dan Mi
     - `rata_rata_permintaan` (Decimal) - _Nilai D (Demand)_
     - `biaya_pesan` (Decimal) - _Nilai S (Ordering Cost)_
     - `biaya_simpan` (Decimal) - _Nilai H (Holding Cost)_
-    - `faktor_biaya_simpan` (Decimal) - _Nilai % jika H dihitung dari Harga _ Faktor\*
+    - `faktor_biaya_simpan` (Decimal) - _Nilai % jika H dihitung dari Harga \* Faktor_
     - `lead_time` (Integer) - _Nilai LT (Waktu tunggu dalam hari)_
     - `service_level_z` (Decimal) - _Nilai Z (Contoh 1.65 untuk 95%)_
     - `created_at`, `updated_at` (Timestamp)
 - **Relasi:**
     - `belongsTo` ke `medicines`.
-    - `hasMany` ke `eoq_calculations` (Satu parameter bisa menghasilkan satu/lebih riwayat kalkulasi).
+    - `hasMany` ke `eoq_calculations`.
 
 ### 5. Tabel `eoq_calculations`
 
-Menyimpan hasil perhitungan sistem dari metode EOQ dan Min-Max.
+Menyimpan hasil perhitungan sistem dari kuantitas optimal dan batas persediaan.
 
 - **Atribut:**
     - `id` (PK, BigInt)
     - `medicine_id` (FK, BigInt) - _Merujuk ke `medicines.id`_
     - `eoq_parameter_id` (FK, BigInt) - _Merujuk ke `eoq_parameters.id`_
-    - `eoq_value` (Decimal) - _Hasil optimal pemesanan (EOQ)_
+    - `eoq_value` (Decimal) - _Hasil optimal pemesanan_
     - `frekuensi_pesan` (Decimal) - _Frekuensi pesan dalam setahun (F)_
     - `total_cost` (Decimal) - _Total Biaya Persediaan (TC)_
     - `safety_stock` (Decimal) - _Stok Pengaman (SS)_
     - `reorder_point` (Decimal) - _Titik pemesanan kembali (ROP)_
     - `stok_minimum` (Decimal) - _Batas bawah stok_
     - `stok_maksimum` (Decimal) - _Batas atas stok_
-    - `status` (String) - _Indikator saat kalkulasi (Aman / Perlu Pesan / Overstock)_
+    - `status` (String) - _Indikator status persediaan (Aman / Kritis / Overstock)_
     - `created_at`, `updated_at` (Timestamp)
 - **Relasi:**
     - `belongsTo` ke `medicines`.
     - `belongsTo` ke `eoq_parameters`.
-
-### 6. Tabel `orders`
-
-Menyimpan data riwayat pemesanan obat ke supplier (restock).
-
-- **Atribut:**
-    - `id` (PK, BigInt)
-    - `medicine_id` (FK, BigInt) - _Merujuk ke `medicines.id`_
-    - `tanggal_pesan` (Date)
-    - `jumlah_pesan` (Integer)
-    - `status` (String) - _Contoh: 'pending', 'selesai'_
-    - `keterangan` (Text, Nullable)
-    - `created_at`, `updated_at` (Timestamp)
-- **Relasi:**
-    - `belongsTo` ke `medicines`.

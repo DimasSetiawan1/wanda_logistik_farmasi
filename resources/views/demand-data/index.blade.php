@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Data Permintaan')
+@section('title', Auth::user()->isInstalasiFarmasi() ? 'Data Pemakaian' : 'Data Permintaan')
 
 @section('breadcrumb')
     <span>/</span>
-    <span class="text-[#04aabe] font-semibold">Data Permintaan Obat</span>
+    <span class="text-[#04aabe] font-semibold">{{ Auth::user()->isInstalasiFarmasi() ? 'Data Pemakaian Obat' : 'Data Permintaan Obat' }}</span>
 @endsection
 
 @section('content')
@@ -14,13 +14,15 @@
         <div>
             <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-chart-line text-[#04aabe]"></i>
-                <span>Riwayat Permintaan Obat</span>
+                <span>{{ Auth::user()->isInstalasiFarmasi() ? 'Riwayat Pemakaian Obat' : 'Riwayat Permintaan Obat' }}</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-1">Data pemakaian/permintaan obat historis per periode bulanan</p>
+            <p class="text-xs text-slate-500 mt-1">
+                {{ Auth::user()->isInstalasiFarmasi() ? 'Data pemakaian obat oleh Instalasi Farmasi per periode bulanan' : 'Data permintaan obat dari Instalasi Farmasi per periode bulanan' }}
+            </p>
         </div>
         <a href="{{ route('demand-data.create') }}" class="px-5 py-2.5 bg-[#04aabe] hover:bg-[#03899c] text-white font-bold rounded-xl shadow-lg shadow-[#04aabe]/30 text-xs flex items-center gap-2 transition-all shrink-0">
             <i class="fa-solid fa-plus"></i>
-            <span>Tambah Data Permintaan</span>
+            <span>{{ Auth::user()->isInstalasiFarmasi() ? 'Tambah Data Pemakaian' : 'Tambah Data Permintaan' }}</span>
         </a>
     </div>
 
@@ -57,7 +59,7 @@
                     <tr class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
                         <th class="py-3.5 px-6">Obat</th>
                         <th class="py-3.5 px-6">Periode</th>
-                        <th class="py-3.5 px-6">Jumlah Permintaan</th>
+                        <th class="py-3.5 px-6">{{ Auth::user()->isInstalasiFarmasi() ? 'Jumlah Pemakaian' : 'Jumlah Permintaan' }}</th>
                         <th class="py-3.5 px-6 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -78,7 +80,7 @@
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                     @if(Auth::user()->isAdmin())
-                                    <form action="{{ route('demand-data.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data permintaan ini?')">
+                                    <form action="{{ route('demand-data.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="p-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all" title="Hapus Data">
@@ -91,7 +93,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="py-8 text-center text-slate-400">Belum ada data permintaan.</td>
+                            <td colspan="4" class="py-8 text-center text-slate-400">Belum ada data {{ Auth::user()->isInstalasiFarmasi() ? 'pemakaian' : 'permintaan' }}.</td>
                         </tr>
                     @endforelse
                 </tbody>

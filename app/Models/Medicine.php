@@ -18,10 +18,12 @@ class Medicine extends Model
         'kategori',
         'harga_per_unit',
         'stok_aktual',
+        'tanggal_kadaluarsa',
     ];
 
     protected $casts = [
         'harga_per_unit' => 'decimal:2',
+        'tanggal_kadaluarsa' => 'date',
     ];
 
     public function demandData()
@@ -52,5 +54,21 @@ class Medicine extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Check if medicine is expired
+     */
+    public function isExpired(): bool
+    {
+        return $this->tanggal_kadaluarsa && $this->tanggal_kadaluarsa->isPast();
+    }
+
+    /**
+     * Check if medicine is near expiration (within 30 days)
+     */
+    public function isNearExpired(): bool
+    {
+        return $this->tanggal_kadaluarsa && !$this->isExpired() && $this->tanggal_kadaluarsa->diffInDays(now()) <= 30;
     }
 }
