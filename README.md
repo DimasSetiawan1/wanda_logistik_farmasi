@@ -1,12 +1,14 @@
 # Logistik Farmasi RS Puspa Husada Bekasi
 
-Sistem Informasi Manajemen Logistik Farmasi RS Puspa Husada Bekasi untuk pengamanan dan optimasi persediaan obat menggunakan metode **Economic Order Quantity (EOQ)** dan **Min-Max Stock**.
+Sistem Informasi Manajemen Logistik Farmasi RS Puspa Husada Bekasi untuk pengamanan dan optimasi persediaan obat berbasis metode **Economic Order Quantity (EOQ)** dan **Min-Max Stock**.
 
 ---
 
 ## 🔄 Alur Operasional Logistik Farmasi (Instalasi Farmasi hingga Kepala Instalasi)
 
-Alur proses bisnis berjalan dari pencatatan pemakaian/permintaan di tingkat Instalasi Farmasi, kalkulasi stok teroptimasi oleh sistem, hingga evaluasi dan persetujuan resmi oleh Kepala Instalasi Farmasi.
+Alur proses bisnis berfokus pada **Pencatatan Pemakaian Obat oleh Instalasi Farmasi**, **Kalkulasi Optimasi Persediaan (EOQ, Min-Max, ABC) oleh Admin Logistik**, dan **Peninjauan & Persetujuan Laporan Resmi oleh Kepala Instalasi Farmasi**.
+
+### 1. Diagram Sequence Alur Operasional
 
 ```mermaid
 sequenceDiagram
@@ -17,51 +19,92 @@ sequenceDiagram
     actor KIF as Kepala Instalasi Farmasi
 
     rect rgb(240, 250, 251)
-    note over IF, SYS: Tahap 1: Pencatatan Pemakaian / Permintaan Obat
-    IF->>SYS: Input Data Pemakaian (Nama Obat, Periode, Jumlah)
-    SYS->>SYS: Pengurangan Stok Aktual Otomatis (stok_aktual - Qty)
+    note over IF, SYS: Tahap 1: Pencatatan Pemakaian Obat (Instalasi Farmasi)
+    IF->>SYS: Input Data Pemakaian Obat (demand_data: Obat, Periode, Jumlah)
+    SYS->>SYS: Otomatis Pengurangan Stok (stok_aktual = stok_aktual - Qty)
     SYS-->>IF: Konfirmasi Pemakaian Tersimpan & Stok Berkurang
     end
 
     rect rgb(248, 250, 252)
-    note over ADM, SYS: Tahap 2: Kalkulasi Optimasi & Monitoring Persediaan
-    SYS->>SYS: Evaluasi Stok (stok_aktual <= stok_minimum ?)
+    note over ADM, SYS: Tahap 2: Pengelolaan Obat & Kalkulasi Optimasi (Admin)
+    ADM->>SYS: Kelola Master Obat & Input Tanggal Kadaluarsa (Expired Date)
+    SYS->>SYS: Evaluasi Stok Otomatis (stok_aktual <= stok_minimum ?)
     alt Stok <= Stok Minimum
-        SYS->>SYS: Tandai Status Obat = Kritis (Perlu Pesan)
+        SYS->>SYS: Indikator Status Obat = Kritis (Perlu Pesan)
     end
     ADM->>SYS: Input/Update Parameter Optimasi (D, S, H, Lead Time, Service Level)
-    SYS->>SYS: Hitung Kuantitas Optimal, SS, ROP, Min, Max & Kategori Prioritas
-    SYS-->>ADM: Tampilkan Hasil Optimasi & Visualisasi Status Stok
+    SYS->>SYS: Hitung EOQ, Safety Stock, ROP, Min, Max & Klasifikasi ABC
+    SYS-->>ADM: Tampilkan Hasil Optimasi & Visualisasi Batas Persediaan
     end
 
     rect rgb(240, 253, 250)
-    note over KIF, SYS: Tahap 3: Peninjauan, Evaluasi & Persetujuan Kepala Instalasi
-    KIF->>SYS: Akses Laporan Output Logistik & Monitoring Stok
-    SYS-->>KIF: Tampilkan Rangkuman Stok Kritis & Rekomendasi Kuantitas
-    KIF->>SYS: Peninjauan & Evaluasi Efisiensi Anggaran Persediaan
+    note over KIF, SYS: Tahap 3: Peninjauan & Approval Laporan (Kepala Instalasi)
+    KIF->>SYS: Akses Monitoring Stok Kritis & Evaluasi Efisiensi
+    KIF->>SYS: Peninjauan Prioritas Kategori Persediaan (ABC)
     KIF->>SYS: Cetak / Pengesahan Laporan PDF Logistik Farmasi
-    SYS-->>KIF: Laporan Logistik Terverifikasi & Disetujui (Siap Pengadaan)
+    SYS-->>KIF: Laporan Terverifikasi & Disetujui (Rujukan Resmi Pengadaan)
     end
 ```
 
-### Rincian Tahapan Alur:
+---
 
-1. **Tahap 1: Input Data Pemakaian oleh Instalasi Farmasi (`instalasi_farmasi`)**
-    - Petugas Instalasi Farmasi menginputkan transaksi pemakaian obat harian/bulanan pada menu **Data Pemakaian**.
-    - Setiap transaksi yang berhasil disimpan akan **secara otomatis mengurangi `stok_aktual` obat** pada database.
-    - Apabila terdapat koreksi/perubahan data pemakaian, stok akan dikembalikan/dibereskan secara otomatis oleh sistem.
+### 2. Diagram Alir Proses Bisnis (Flowchart Operasional)
 
-2. **Tahap 2: Pemantauan Stok & Parameter Optimasi oleh Admin (`admin`)**
-    - Admin memantau kondisi persediaan riil pada menu **Monitoring Batas Stok**. Jika `stok_aktual` turun di bawah `stok_minimum`, obat otomatis berstatus **Stok Kritis**.
-    - Admin mengelola master data obat (termasuk input **Tanggal Kadaluarsa / Expired Date**).
-    - Admin memasukkan parameter operasional (Permintaan $D$, Biaya Pesan $S$, Biaya Simpan $H$, $Lead Time$, $Service Level$) pada menu **Parameter Optimasi Stok**.
-    - Sistem secara otomatis menghitung kuantitas optimal pemesanan, titik pemesanan ulang (ROP), stok pengaman (Safety Stock), serta mengklasifikasikan prioritas persediaan.
+```mermaid
+graph TD
+    A[Start: Login Sistem] --> B{Pilih Role User}
 
-3. **Tahap 3: Peninjauan & Persetujuan oleh Kepala Instalasi Farmasi (`kepala_instalasi`)**
-    - Kepala Instalasi Farmasi masuk ke sistem untuk meninjau status ketersediaan obat dan daftar item berstatus **Stok Kritis**.
-    - Kepala Instalasi memeriksa halaman **Evaluasi Efisiensi Stok** dan **Prioritas Kategori Stok** untuk memastikan efisiensi anggaran logistik.
-    - Kepala Instalasi membuka menu **Laporan Sistem** dan mengunduh / mencetak **Laporan PDF Output Logistik Farmasi**.
-    - Kepala Instalasi memberikan **Persetujuan Resmi (Approval)** berupa penandatanganan dokumen Laporan Logistik Farmasi sebagai dasar rujukan pengadaan obat rumah sakit.
+    %% Role Instalasi Farmasi
+    B -->|Instalasi Farmasi| C[Akses Menu Data Pemakaian]
+    C --> D[Input Transaksi Pemakaian Obat]
+    D --> E[Sistem Potong Stok Aktual Otomatis]
+    E --> F[Lihat Rekapitulasi Pemakaian]
+
+    %% Role Admin Logistik
+    B -->|Admin Logistik| G[Kelola Master Obat & Expired Date]
+    G --> H[Input Parameter Optimasi D, S, H, LT, Z]
+    H --> I[Sistem Hitung EOQ, SS, ROP, Min, Max & ABC]
+    I --> J[Memantau Monitoring Batas Stok Kritis]
+    J --> K[Lihat Read-Only Data Permintaan]
+
+    %% Role Kepala Instalasi
+    B -->|Kepala Instalasi| L[Akses Dashboard & Monitoring Stok]
+    L --> M[Tinjau Evaluasi Efisiensi & Kategori ABC]
+    M --> N[Buka Menu Laporan Sistem]
+    N --> O[Cetak & Pengesahan Laporan PDF]
+    O --> P[End: Pengadaan Obat Disetujui]
+```
+
+---
+
+### 3. Rincian Tahapan Alur & Hak Akses Per Role:
+
+#### 🟢 Tahap 1: Pencatatan Pemakaian Obat (`instalasi_farmasi`)
+
+- Petugas **Instalasi Farmasi** masuk ke menu **Data Pemakaian** (`demand-data`).
+- Petugas menginputkan transaksi pemakaian obat harian/bulanan (Nama Obat, Periode, dan Jumlah Pemakaian).
+- Setiap pemakaian yang disimpan **secara otomatis mengurangi `stok_aktual` obat** pada database.
+- Instalasi Farmasi memiliki akses _Read-Only_ pada Katalog Data Obat (tidak bisa menambah, mengedit, atau menghapus master obat).
+
+#### 🔵 Tahap 2: Pengelolaan Obat & Kalkulasi Optimasi (`admin`)
+
+- **Admin Logistik** mengelola data master obat pada menu **Data Obat** (`medicines`), termasuk menginputkan **Tanggal Kadaluarsa (Expired Date)**.
+- Admin memasukkan variabel operasional ($D, S, H, Lead Time, Service Level$) pada menu **Parameter Optimasi Stok** (`eoq.index`).
+- Sistem secara otomatis menghitung:
+    - **Kuantitas Pemesanan Optimal ($EOQ^*$)**
+    - **Stok Pengaman ($SS$)**
+    - **Titik Pemesanan Ulang ($ROP$)**
+    - **Stok Minimum ($Min$) & Stok Maksimum ($Max$)**
+    - **Klasifikasi Prioritas Stok ($ABC$)**
+- Admin memantau kondisi persediaan pada menu **Monitoring Batas Stok** (`minmax.monitoring`). Apabila `stok_aktual` $\le$ `stok_minimum`, sistem memberikan indikator **Stok Kritis**.
+- Admin memiliki akses _Read-Only_ pada menu **Data Permintaan Obat** (tidak bisa menambah, mengedit, atau menghapus data pemakaian).
+
+#### 🟣 Tahap 3: Peninjauan, Evaluasi & Pengesahan Laporan (`kepala_instalasi`)
+
+- **Kepala Instalasi Farmasi** masuk ke sistem untuk meninjau status ketersediaan obat dan daftar item berstatus **Stok Kritis**.
+- Kepala Instalasi memeriksa halaman **Evaluasi Efisiensi Stok** (`evaluation.eoq`) dan **Prioritas Kategori Stok** (`evaluation.abc`) untuk memverifikasi penyerapan anggaran persediaan.
+- Kepala Instalasi membuka menu **Laporan Sistem** (`reports.index`) dan mengunduh / mencetak **Laporan PDF Output Logistik Farmasi** (`reports.pdf`).
+- Kepala Instalasi memberikan **Persetujuan Resmi (Approval)** berupa penandatanganan dokumen Laporan Logistik Farmasi sebagai rujukan pengadaan obat rumah sakit.
 
 ---
 
@@ -167,7 +210,7 @@ Metode klasifikasi persediaan berdasarkan nilai penyerapan modal atau nilai pema
 
 ---
 
-## 🗄️ Detail Database Schema & Relasi (Untuk Class Diagram & ERD)
+## 🗄️ Detail Database Schema & Relasi (Strict 5 Tabel Core)
 
 Struktur tabel, atribut, dan relasi pada sistem Logistik Farmasi RS Puspa Husada:
 

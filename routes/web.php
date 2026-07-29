@@ -24,8 +24,8 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Master Obat
-    Route::resource('medicines', MedicineController::class);
+    // Master Obat (Lihat Obat: Semua Role)
+    Route::get('medicines', [MedicineController::class, 'index'])->name('medicines.index');
 
     // Data Pemakaian / Permintaan
     Route::resource('demand-data', DemandDataController::class)->parameters([
@@ -47,14 +47,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('evaluation/abc', [EvaluationController::class, 'abcAnalysis'])->name('evaluation.abc');
     Route::get('evaluation/eoq', [EvaluationController::class, 'eoqEvaluation'])->name('evaluation.eoq');
     Route::get('evaluation/periodic', [EvaluationController::class, 'periodicReview'])->name('evaluation.periodic');
-    Route::put('evaluation/parameter/{parameter}', [EvaluationController::class, 'updateParameter'])->name('evaluation.updateParameter');
 
     // Laporan
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('reports/pdf', [ReportController::class, 'exportPdf'])->name('reports.pdf');
 
-    // Admin Only: Kelola User
+    // Admin Only Routes (Kelola User, Kelola Master Obat, Parameter Update)
     Route::middleware(['role:admin'])->group(function () {
+        Route::get('medicines/create', [MedicineController::class, 'create'])->name('medicines.create');
+        Route::post('medicines', [MedicineController::class, 'store'])->name('medicines.store');
+        Route::get('medicines/{medicine}/edit', [MedicineController::class, 'edit'])->name('medicines.edit');
+        Route::put('medicines/{medicine}', [MedicineController::class, 'update'])->name('medicines.update');
+        Route::delete('medicines/{medicine}', [MedicineController::class, 'destroy'])->name('medicines.destroy');
+
+        Route::put('evaluation/parameter/{parameter}', [EvaluationController::class, 'updateParameter'])->name('evaluation.updateParameter');
         Route::resource('users', UserManagementController::class);
     });
 });

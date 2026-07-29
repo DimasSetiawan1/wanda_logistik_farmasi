@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Medicine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MedicineController extends Controller
 {
+    private function authorizeAdmin()
+    {
+        if (!Auth::user() || !Auth::user()->isAdmin()) {
+            abort(403, 'Akses ditolak. Pengelolaan data obat hanya dapat dilakukan oleh Administrator Logistik.');
+        }
+    }
+
     public function index(Request $request)
     {
         $query = Medicine::query();
@@ -30,11 +38,14 @@ class MedicineController extends Controller
 
     public function create()
     {
+        $this->authorizeAdmin();
         return view('medicines.create');
     }
 
     public function store(Request $request)
     {
+        $this->authorizeAdmin();
+
         $request->validate([
             'kode_obat' => 'required|string|unique:medicines,kode_obat',
             'nama_obat' => 'required|string|max:255',
@@ -60,11 +71,14 @@ class MedicineController extends Controller
 
     public function edit(Medicine $medicine)
     {
+        $this->authorizeAdmin();
         return view('medicines.edit', compact('medicine'));
     }
 
     public function update(Request $request, Medicine $medicine)
     {
+        $this->authorizeAdmin();
+
         $request->validate([
             'kode_obat' => 'required|string|unique:medicines,kode_obat,' . $medicine->id,
             'nama_obat' => 'required|string|max:255',
@@ -90,6 +104,7 @@ class MedicineController extends Controller
 
     public function destroy(Medicine $medicine)
     {
+        $this->authorizeAdmin();
         $medicine->delete();
 
         return redirect()->route('medicines.index')

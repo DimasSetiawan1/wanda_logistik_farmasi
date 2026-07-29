@@ -15,16 +15,18 @@
             <div>
                 <h2 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
                     <i class="fa-solid fa-capsules text-[#04aabe]"></i>
-                    <span>Kelola Data Obat</span>
+                    <span>Daftar Data Obat</span>
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Daftar obat yang terdaftar di Sistem Logistik Farmasi RS Puspa Husada
+                <p class="text-xs text-slate-500 mt-1">Daftar katalog obat yang terdaftar di Sistem Logistik Farmasi RS Puspa Husada
                 </p>
             </div>
+            @if(Auth::user()->isAdmin())
             <a href="{{ route('medicines.create') }}"
                 class="px-5 py-2.5 bg-[#04aabe] hover:bg-[#03899c] text-white font-bold rounded-xl shadow-lg shadow-[#04aabe]/30 text-xs flex items-center gap-2 transition-all shrink-0">
                 <i class="fa-solid fa-plus"></i>
                 <span>Tambah Obat Baru</span>
             </a>
+            @endif
         </div>
 
         <!-- Search & Filter Bar -->
@@ -67,7 +69,9 @@
                             <th class="py-3.5 px-5">Tgl Kadaluarsa</th>
                             <th class="py-3.5 px-5">Harga / Unit</th>
                             <th class="py-3.5 px-5">Stok Aktual</th>
+                            @if(Auth::user()->isAdmin())
                             <th class="py-3.5 px-5 text-center">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
@@ -125,6 +129,7 @@
                                     {{ number_format($medicine->stok_aktual) }} <span
                                         class="text-[10px] text-slate-400 font-normal">{{ $medicine->satuan }}</span>
                                 </td>
+                                @if(Auth::user()->isAdmin())
                                 <td class="py-4 px-5 text-center">
                                     <div class="flex items-center justify-center gap-2">
                                         <a href="{{ route('medicines.edit', $medicine->id) }}"
@@ -132,24 +137,23 @@
                                             title="Ubah Obat">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
-                                        @if(Auth::user()->isAdmin())
-                                            <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus obat ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="p-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all"
-                                                    title="Hapus Obat">
-                                                    <i class="fa-solid fa-trash-can"></i>
-                                                </button>
-                                            </form>
-                                        @endif
+                                        <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST"
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus obat ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="p-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all"
+                                                title="Hapus Obat">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="py-8 text-center text-slate-400">Tidak ada data obat yang ditemukan.</td>
+                                <td colspan="{{ Auth::user()->isAdmin() ? 9 : 8 }}" class="py-8 text-center text-slate-400">Tidak ada data obat yang ditemukan.</td>
                             </tr>
                         @endforelse
                     </tbody>

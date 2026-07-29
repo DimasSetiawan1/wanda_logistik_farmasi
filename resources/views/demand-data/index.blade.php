@@ -17,13 +17,15 @@
                 <span>{{ Auth::user()->isInstalasiFarmasi() ? 'Riwayat Pemakaian Obat' : 'Riwayat Permintaan Obat' }}</span>
             </h2>
             <p class="text-xs text-slate-500 mt-1">
-                {{ Auth::user()->isInstalasiFarmasi() ? 'Data pemakaian obat oleh Instalasi Farmasi per periode bulanan' : 'Data permintaan obat dari Instalasi Farmasi per periode bulanan' }}
+                {{ Auth::user()->isInstalasiFarmasi() ? 'Data pemakaian obat oleh Instalasi Farmasi per periode bulanan' : 'Data pemakaian/permintaan obat dari Instalasi Farmasi per periode bulanan' }}
             </p>
         </div>
+        @if(Auth::user()->isInstalasiFarmasi())
         <a href="{{ route('demand-data.create') }}" class="px-5 py-2.5 bg-[#04aabe] hover:bg-[#03899c] text-white font-bold rounded-xl shadow-lg shadow-[#04aabe]/30 text-xs flex items-center gap-2 transition-all shrink-0">
             <i class="fa-solid fa-plus"></i>
-            <span>{{ Auth::user()->isInstalasiFarmasi() ? 'Tambah Data Pemakaian' : 'Tambah Data Permintaan' }}</span>
+            <span>Tambah Data Pemakaian</span>
         </a>
+        @endif
     </div>
 
     <!-- Filter Bar -->
@@ -60,7 +62,9 @@
                         <th class="py-3.5 px-6">Obat</th>
                         <th class="py-3.5 px-6">Periode</th>
                         <th class="py-3.5 px-6">{{ Auth::user()->isInstalasiFarmasi() ? 'Jumlah Pemakaian' : 'Jumlah Permintaan' }}</th>
+                        @if(Auth::user()->isInstalasiFarmasi())
                         <th class="py-3.5 px-6 text-center">Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
@@ -74,26 +78,26 @@
                             <td class="py-4 px-6 font-bold text-[#04aabe]">
                                 {{ number_format($item->jumlah_permintaan) }} <span class="text-[10px] text-slate-400 font-normal">{{ $item->medicine->satuan }}</span>
                             </td>
+                            @if(Auth::user()->isInstalasiFarmasi())
                             <td class="py-4 px-6 text-center">
                                 <div class="flex items-center justify-center gap-2">
                                     <a href="{{ route('demand-data.edit', $item->id) }}" class="p-2 bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white rounded-xl transition-all" title="Ubah Data">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
-                                    @if(Auth::user()->isAdmin())
-                                    <form action="{{ route('demand-data.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
+                                    <form action="{{ route('demand-data.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data pemakaian ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="p-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all" title="Hapus Data">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     </form>
-                                    @endif
                                 </div>
                             </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="py-8 text-center text-slate-400">Belum ada data {{ Auth::user()->isInstalasiFarmasi() ? 'pemakaian' : 'permintaan' }}.</td>
+                            <td colspan="{{ Auth::user()->isInstalasiFarmasi() ? 4 : 3 }}" class="py-8 text-center text-slate-400">Belum ada data {{ Auth::user()->isInstalasiFarmasi() ? 'pemakaian' : 'permintaan' }}.</td>
                         </tr>
                     @endforelse
                 </tbody>

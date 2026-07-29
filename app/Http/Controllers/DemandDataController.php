@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\DemandData;
 use App\Models\Medicine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DemandDataController extends Controller
 {
+    private function authorizeInstalasiFarmasi()
+    {
+        if (!Auth::user() || !Auth::user()->isInstalasiFarmasi()) {
+            abort(403, 'Akses ditolak. Penginputan dan pembaruan data pemakaian obat hanya dapat dilakukan oleh Instalasi Farmasi.');
+        }
+    }
+
     public function index(Request $request)
     {
         $query = DemandData::with('medicine');
@@ -31,12 +39,15 @@ class DemandDataController extends Controller
 
     public function create()
     {
+        $this->authorizeInstalasiFarmasi();
         $medicines = Medicine::orderBy('nama_obat')->get();
         return view('demand-data.create', compact('medicines'));
     }
 
     public function store(Request $request)
     {
+        $this->authorizeInstalasiFarmasi();
+
         $request->validate([
             'medicine_id' => 'required|exists:medicines,id',
             'periode' => 'required|string',
@@ -47,23 +58,26 @@ class DemandDataController extends Controller
 
         DemandData::create($request->all());
 
-        // Otomatis kurangi stok aktual obat saat pengajuan/permintaan dilakukan
+        // Otomatis kurangi stok aktual obat saat pengajuan/pemakaian dilakukan
         if ($request->jumlah_permintaan > 0) {
             $medicine->decrement('stok_aktual', $request->jumlah_permintaan);
         }
 
         return redirect()->route('demand-data.index')
-            ->with('success', "Data permintaan berhasil ditambahkan. Stok {$medicine->nama_obat} berkurang {$request->jumlah_permintaan} {$medicine->satuan}.");
+            ->with('success', "Data pemakaian berhasil ditambahkan. Stok {$medicine->nama_obat} berkurang {$request->jumlah_permintaan} {$medicine->satuan}.");
     }
 
     public function edit(DemandData $demandDatum)
     {
+        $this->authorizeInstalasiFarmasi();
         $medicines = Medicine::orderBy('nama_obat')->get();
         return view('demand-data.edit', compact('demandDatum', 'medicines'));
     }
 
     public function update(Request $request, DemandData $demandDatum)
     {
+        $this->authorizeInstalasiFarmasi();
+
         $request->validate([
             'medicine_id' => 'required|exists:medicines,id',
             'periode' => 'required|string',
@@ -95,12 +109,14 @@ class DemandDataController extends Controller
         $demandDatum->update($request->all());
 
         return redirect()->route('demand-data.index')
-            ->with('success', 'Data permintaan dan stok obat berhasil diperbarui.');
+            ->with('success', 'Data pemakaian dan stok obat berhasil diperbarui.');
     }
 
     public function destroy(DemandData $demandDatum)
     {
-        // Restore stok jika data permintaan dihapus
+        $this->authorizeInstalasiFarmasi();
+
+        // Restore stok jika data pemakaian dihapus
         $medicine = $demandDatum->medicine;
         if ($medicine && $demandDatum->jumlah_permintaan > 0) {
             $medicine->increment('stok_aktual', $demandDatum->jumlah_permintaan);
@@ -109,6 +125,6 @@ class DemandDataController extends Controller
         $demandDatum->delete();
 
         return redirect()->route('demand-data.index')
-            ->with('success', 'Data permintaan berhasil dihapus dan stok obat dikembalikan.');
+            ->with('success', 'Data pemakaian berhasil dihapus dan stok obat dikembalikan.');
     }
 }
