@@ -20,7 +20,7 @@
         </div>
         <a href="{{ route('reports.pdf') }}" target="_blank" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-600/30 text-xs flex items-center gap-2 transition-all shrink-0">
             <i class="fa-solid fa-file-arrow-down"></i>
-            <span>Cetak / Download Laporan PDF</span>
+            <span>Cetak / Unduh Laporan PDF</span>
         </a>
     </div>
 
@@ -42,9 +42,9 @@
                         <th class="py-3.5 px-5 text-right">Frekuensi Pesan</th>
                         <th class="py-3.5 px-5 text-right text-rose-700 font-bold">Stok Min</th>
                         <th class="py-3.5 px-5 text-right text-[#04aabe] font-bold">Stok Max</th>
-                        <th class="py-3.5 px-5 text-right">Safety Stock</th>
-                        <th class="py-3.5 px-5 text-right">ROP</th>
-                        <th class="py-3.5 px-5 text-center">Status</th>
+                        <th class="py-3.5 px-5 text-right">Stok Pengaman</th>
+                        <th class="py-3.5 px-5 text-right">Titik Pesan Ulang</th>
+                        <th class="py-3.5 px-5 text-center">Status Stok</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
@@ -67,11 +67,11 @@
                                     </span>
                                 @elseif($calc->status === 'overstock')
                                     <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-boxes-stacked"></i> Overstock
+                                        <i class="fa-solid fa-boxes-stacked"></i> Stok Berlebih
                                     </span>
                                 @else
                                     <span class="px-2.5 py-1 bg-brand-50 text-[#04aabe] border border-cyan-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-circle-check"></i> Aman
+                                        <i class="fa-solid fa-circle-check"></i> Stok Aman
                                     </span>
                                 @endif
                             </td>

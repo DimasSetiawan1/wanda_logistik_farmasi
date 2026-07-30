@@ -42,25 +42,25 @@
     </div>
 
     <!-- Chart & Table Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Chart -->
-        <div class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
-            <div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Chart Container -->
+        <div class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between w-full overflow-hidden">
+            <div class="mb-4">
                 <h3 class="text-base font-bold text-slate-800 mb-1">Distribusi Prioritas Stok</h3>
                 <p class="text-xs text-slate-400">Proporsi item obat per kelompok investasi</p>
             </div>
-            <div class="py-6 flex items-center justify-center">
-                <div class="w-60 h-60">
+            <div class="py-4 w-full flex items-center justify-center">
+                <div class="relative w-full max-w-[220px] aspect-square">
                     <canvas id="abcChart"></canvas>
                 </div>
             </div>
-            <div class="text-[11px] text-slate-400 text-center font-medium">
+            <div class="mt-4 text-[11px] text-slate-400 text-center font-medium">
                 Kategori A membutuhkan perhatian paling ketat dalam perencanaan stok.
             </div>
         </div>
 
-        <!-- Table -->
-        <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <!-- Table Container -->
+        <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden w-full">
             <div class="p-6 border-b border-slate-100">
                 <h3 class="text-base font-bold text-slate-800">Rincian Klasifikasi Item Obat</h3>
                 <p class="text-xs text-slate-500 mt-1">Urutan obat berdasarkan investasi nilai pemakaian</p>
@@ -88,7 +88,7 @@
                                 <td class="py-3.5 px-5 text-right font-black text-slate-900">Rp {{ number_format($item['nilai_pakai'], 0, ',', '.') }}</td>
                                 <td class="py-3.5 px-5 text-right font-bold text-[#04aabe]">{{ $item['persentase'] }}%</td>
                                 <td class="py-3.5 px-5 text-center">
-                                    <span class="px-2.5 py-1 text-[10px] font-black rounded-lg uppercase tracking-wider
+                                    <span class="px-2.5 py-1 text-[10px] font-black rounded-lg uppercase tracking-wider whitespace-nowrap
                                         {{ $item['kategori_abc'] === 'A' ? 'bg-rose-50 text-rose-700 border border-rose-200' : ($item['kategori_abc'] === 'B' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-brand-50 text-[#04aabe] border border-cyan-200') }}">
                                         Kategori {{ $item['kategori_abc'] }}
                                     </span>
@@ -118,16 +118,20 @@
                 data: [{{ $summary['A']['count'] }}, {{ $summary['B']['count'] }}, {{ $summary['C']['count'] }}],
                 backgroundColor: ['#f43f5e', '#f59e0b', '#04aabe'],
                 borderWidth: 0,
-                hoverOffset: 10,
+                hoverOffset: 8,
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { font: { size: 11 } }
+                    labels: { 
+                        font: { size: 11 },
+                        padding: 14,
+                        boxWidth: 12
+                    }
                 }
             },
             cutout: '65%',

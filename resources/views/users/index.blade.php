@@ -20,7 +20,7 @@
         </div>
         <a href="{{ route('users.create') }}" class="px-5 py-2.5 bg-[#04aabe] hover:bg-[#03899c] text-white font-bold rounded-xl shadow-lg shadow-[#04aabe]/30 text-xs flex items-center gap-2 transition-all shrink-0">
             <i class="fa-solid fa-user-plus"></i>
-            <span>Tambah User Baru</span>
+            <span>Tambah Pengguna Baru</span>
         </a>
     </div>
 
@@ -32,10 +32,10 @@
                     <tr class="bg-slate-50 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
                         <th class="py-3.5 px-5">No</th>
                         <th class="py-3.5 px-5">Nama Lengkap</th>
-                        <th class="py-3.5 px-5">Username</th>
-                        <th class="py-3.5 px-5">Role Akses</th>
+                        <th class="py-3.5 px-5">Nama Pengguna</th>
+                        <th class="py-3.5 px-5">Peran Pengguna</th>
                         <th class="py-3.5 px-5">Tanggal Dibuat</th>
-                        <th class="py-3.5 px-5 text-center">Aksi</th>
+                        <th class="py-3.5 px-5 text-center">Kelola</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
@@ -66,13 +66,13 @@
                             <td class="py-4 px-5 text-slate-500">{{ $user->created_at->format('d/m/Y') }}</td>
                             <td class="py-4 px-5 text-center">
                                 <div class="flex items-center justify-center gap-2">
-                                    <a href="{{ route('users.edit', $user) }}" class="p-2 bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white rounded-xl transition-all" title="Ubah User">
+                                    <a href="{{ route('users.edit', $user) }}" class="p-2 bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white rounded-xl transition-all" title="Ubah Pengguna">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                     @if($user->id !== auth()->id())
                                         <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Hapus akun pengguna ini?')">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="p-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all" title="Hapus User">
+                                            <button type="submit" class="p-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all" title="Hapus Pengguna">
                                                 <i class="fa-solid fa-trash-can"></i>
                                             </button>
                                         </form>

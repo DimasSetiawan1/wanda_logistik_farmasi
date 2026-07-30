@@ -43,12 +43,12 @@
                 <button type="submit"
                     class="w-full sm:w-auto px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-filter"></i>
-                    <span>Filter</span>
+                    <span>Saring</span>
                 </button>
                 @if(request()->hasAny(['search', 'kategori']))
                     <a href="{{ route('medicines.index') }}"
                         class="w-full sm:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-xl text-center transition-all">
-                        Reset
+                        Atur Ulang
                     </a>
                 @endif
             </form>
@@ -68,9 +68,9 @@
                             <th class="py-3.5 px-5">Tingkat Pemakaian</th>
                             <th class="py-3.5 px-5">Tgl Kadaluarsa</th>
                             <th class="py-3.5 px-5">Harga / Unit</th>
-                            <th class="py-3.5 px-5">Stok Aktual</th>
+                            <th class="py-3.5 px-5">Stok Saat Ini</th>
                             @if(Auth::user()->isAdmin())
-                            <th class="py-3.5 px-5 text-center">Aksi</th>
+                            <th class="py-3.5 px-5 text-center">Kelola</th>
                             @endif
                         </tr>
                     </thead>
@@ -108,11 +108,11 @@
                                     @if($medicine->tanggal_kadaluarsa)
                                         @if($medicine->isExpired())
                                             <span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                                <i class="fa-solid fa-triangle-exclamation"></i> {{ $medicine->tanggal_kadaluarsa->format('d/m/Y') }} (Expired)
+                                                <i class="fa-solid fa-triangle-exclamation"></i> {{ $medicine->tanggal_kadaluarsa->format('d/m/Y') }} (Kadaluarsa)
                                             </span>
                                         @elseif($medicine->isNearExpired())
                                             <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                                <i class="fa-solid fa-clock-rotate-left"></i> {{ $medicine->tanggal_kadaluarsa->format('d/m/Y') }} (Segera Expiry)
+                                                <i class="fa-solid fa-clock-rotate-left"></i> {{ $medicine->tanggal_kadaluarsa->format('d/m/Y') }} (Mendekati Kadaluarsa)
                                             </span>
                                         @else
                                             <span class="font-medium text-slate-700 whitespace-nowrap">

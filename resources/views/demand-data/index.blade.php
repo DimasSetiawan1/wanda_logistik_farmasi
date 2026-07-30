@@ -43,11 +43,11 @@
             </div>
             <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2">
                 <i class="fa-solid fa-filter"></i>
-                <span>Filter</span>
+                <span>Saring</span>
             </button>
             @if(request()->has('medicine_id'))
                 <a href="{{ route('demand-data.index') }}" class="w-full sm:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-xl text-center transition-all">
-                    Reset
+                    Atur Ulang
                 </a>
             @endif
         </form>
@@ -63,7 +63,7 @@
                         <th class="py-3.5 px-6">Periode</th>
                         <th class="py-3.5 px-6">{{ Auth::user()->isInstalasiFarmasi() ? 'Jumlah Pemakaian' : 'Jumlah Permintaan' }}</th>
                         @if(Auth::user()->isInstalasiFarmasi())
-                        <th class="py-3.5 px-6 text-center">Aksi</th>
+                        <th class="py-3.5 px-6 text-center">Kelola</th>
                         @endif
                     </tr>
                 </thead>

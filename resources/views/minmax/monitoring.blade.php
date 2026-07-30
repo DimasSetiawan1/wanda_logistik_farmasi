@@ -47,7 +47,7 @@
                 <i class="fa-solid fa-boxes-stacked"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Kelebihan (Overstock)</p>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stok Berlebih</p>
                 <h3 class="text-2xl font-black text-amber-600 mt-0.5">{{ $summary['overstock'] }} Obat</h3>
             </div>
         </div>
@@ -96,11 +96,11 @@
                                     </span>
                                 @elseif($calc->status === 'overstock')
                                     <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-boxes-stacked"></i> Overstock
+                                        <i class="fa-solid fa-boxes-stacked"></i> Stok Berlebih
                                     </span>
                                 @else
                                     <span class="px-2.5 py-1 bg-brand-50 text-[#04aabe] border border-cyan-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-circle-check"></i> Aman
+                                        <i class="fa-solid fa-circle-check"></i> Stok Aman
                                     </span>
                                 @endif
                             </td>

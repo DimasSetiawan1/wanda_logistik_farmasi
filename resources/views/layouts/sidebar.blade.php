@@ -77,12 +77,7 @@
 
                 <a href="{{ route('evaluation.eoq') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('evaluation.eoq') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
                     <i class="fa-solid fa-scale-balanced w-4 text-center text-xs"></i>
-                    <span>Evaluasi Efisiensi Stok</span>
-                </a>
-
-                <a href="{{ route('evaluation.periodic') }}" @click="sidebarOpen = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('evaluation.periodic') ? 'bg-[#04aabe] text-white shadow-lg shadow-[#04aabe]/30' : 'hover:bg-slate-800/70 text-slate-300 hover:text-white' }}">
-                    <i class="fa-solid fa-arrows-rotate w-4 text-center text-xs"></i>
-                    <span>Review Periodik Stok</span>
+                    <span>Evaluasi Biaya Persediaan</span>
                 </a>
             </div>
         </div>

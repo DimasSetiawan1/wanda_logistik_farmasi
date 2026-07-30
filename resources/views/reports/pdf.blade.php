@@ -131,7 +131,7 @@
     <div class="header">
         <h2>RS PUSPA HUSADA BEKASI</h2>
         <h3>Laporan Rekomendasi Kuantitas & Batas Stok Persediaan</h3>
-        <p>Hasil Perhitungan Optimalisasi dan Prioritas Persediaan Logistik Farmasi</p>
+        <p>Hasil Perhitungan Pemesanan Optimal dan Kategori Prioritas Persediaan Logistik Farmasi</p>
         <p>Dicetak: {{ $tanggalCetak }}</p>
     </div>
 
@@ -144,12 +144,12 @@
                 <th>Kode</th>
                 <th>Nama Obat</th>
                 <th class="text-center">Kat</th>
-                <th class="text-right">D</th>
-                <th class="text-right">S (Rp)</th>
-                <th class="text-right">H (Rp)</th>
+                <th class="text-right">Permintaan</th>
+                <th class="text-right">Biaya Pesan (Rp)</th>
+                <th class="text-right">Biaya Simpan (Rp)</th>
                 <th class="text-right">Kuantitas Optimal</th>
-                <th class="text-right">F</th>
-                <th class="text-right">TC (Rp)</th>
+                <th class="text-right">Frekuensi Pesan</th>
+                <th class="text-right">Total Biaya (Rp)</th>
             </tr>
         </thead>
         <tbody>
@@ -165,7 +165,7 @@
                     <td class="text-right">{{ number_format($calc->eoqParameter->biaya_pesan, 0, ',', '.') }}</td>
                     <td class="text-right">{{ number_format($calc->eoqParameter->biaya_simpan, 0, ',', '.') }}</td>
                     <td class="text-right" style="font-weight: bold;">{{ number_format($calc->eoq_value, 0) }}</td>
-                    <td class="text-right">{{ number_format($calc->frekuensi_pesan, 1) }}</td>
+                    <td class="text-right">{{ number_format($calc->frekuensi_pesan, 1) }}×</td>
                     <td class="text-right">{{ number_format($calc->total_cost, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
@@ -179,12 +179,12 @@
             <tr>
                 <th>No</th>
                 <th>Nama Obat</th>
-                <th class="text-right">Stok Aktual</th>
-                <th class="text-right">Safety Stock</th>
-                <th class="text-right">ROP</th>
+                <th class="text-right">Stok Saat Ini</th>
+                <th class="text-right">Stok Pengaman</th>
+                <th class="text-right">Titik Pesan Ulang</th>
                 <th class="text-right">Stok Min</th>
                 <th class="text-right">Stok Max</th>
-                <th class="text-center">Status</th>
+                <th class="text-center">Status Stok</th>
             </tr>
         </thead>
         <tbody>
@@ -199,7 +199,7 @@
                     <td class="text-right">{{ number_format($calc->stok_maksimum, 0) }}</td>
                     <td class="text-center">
                         <span class="badge badge-{{ $calc->status }}">
-                            {{ $calc->status === 'perlu_pesan' ? 'Stok Kritis' : ($calc->status === 'overstock' ? 'Overstock' : 'Normal') }}
+                            {{ $calc->status === 'perlu_pesan' ? 'Stok Kritis' : ($calc->status === 'overstock' ? 'Stok Berlebih' : 'Stok Aman') }}
                         </span>
                     </td>
                 </tr>
@@ -217,8 +217,8 @@
                 <th>Nama Obat</th>
                 <th class="text-right">Total Permintaan</th>
                 <th class="text-right">Harga/Unit</th>
-                <th class="text-right">Nilai Pakai</th>
-                <th class="text-right">%</th>
+                <th class="text-right">Nilai Pemakaian</th>
+                <th class="text-right">% Kontribusi</th>
                 <th class="text-right">Kumulatif</th>
                 <th class="text-center">Kategori</th>
             </tr>
@@ -242,7 +242,7 @@
     </table>
 
     <p style="margin-top: 5px; font-size: 8pt; color: #666;">
-        Kategori A: 0-70% (Investasi Tinggi) | Kategori B: 70-90% (Investasi Sedang) | Kategori C: 90-100% (Investasi Rendah)
+        Kategori A: 0-70% (Prioritas Utama) | Kategori B: 70-90% (Prioritas Sedang) | Kategori C: 90-100% (Prioritas Pendukung)
     </p>
     @endif
 

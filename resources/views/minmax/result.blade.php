@@ -33,12 +33,12 @@
                         <th class="py-3.5 px-5">No</th>
                         <th class="py-3.5 px-5">Nama Obat</th>
                         <th class="py-3.5 px-5 text-right">Lead Time (Hari)</th>
-                        <th class="py-3.5 px-5 text-right">Stok Pengaman (Safety Stock)</th>
-                        <th class="py-3.5 px-5 text-right">Titik Pesan (ROP)</th>
+                        <th class="py-3.5 px-5 text-right">Stok Pengaman</th>
+                        <th class="py-3.5 px-5 text-right">Titik Pesan Ulang</th>
                         <th class="py-3.5 px-5 text-right text-rose-700 font-bold">Stok Minimum</th>
                         <th class="py-3.5 px-5 text-right text-[#04aabe] font-bold">Stok Maksimum</th>
                         <th class="py-3.5 px-5 text-right">Stok Saat Ini</th>
-                        <th class="py-3.5 px-5 text-center">Status Sesi</th>
+                        <th class="py-3.5 px-5 text-center">Status Stok</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
@@ -59,11 +59,11 @@
                                     </span>
                                 @elseif($calc->status === 'overstock')
                                     <span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-boxes-stacked"></i> Overstock
+                                        <i class="fa-solid fa-boxes-stacked"></i> Stok Berlebih
                                     </span>
                                 @else
                                     <span class="px-2.5 py-1 bg-brand-50 text-[#04aabe] border border-cyan-200 font-bold rounded-lg text-[10px] whitespace-nowrap inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-circle-check"></i> Aman
+                                        <i class="fa-solid fa-circle-check"></i> Stok Aman
                                     </span>
                                 @endif
                             </td>
