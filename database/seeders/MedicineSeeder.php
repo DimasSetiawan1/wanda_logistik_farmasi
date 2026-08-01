@@ -20,7 +20,7 @@ class MedicineSeeder extends Seeder
         EoqParameter::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        // 20 Master Medicines from User Data Table
+        // 20 Master Medicines from User Table Image
         $medicinesData = [
             [
                 'kode_obat' => 'NB00000378',
@@ -28,10 +28,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antidiabetik',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sangat Sering',
-                'harga_per_unit' => 4200,
+                'harga_per_unit' => 13000,
                 'stok_aktual' => 120,
                 'tanggal_kadaluarsa' => '2027-06-30',
                 'total_pemakaian_tahunan' => 960,
+                'lead_time' => 7,
             ],
             [
                 'kode_obat' => 'NB00000377',
@@ -39,10 +40,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antidiabetik',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 3150,
+                'harga_per_unit' => 10000,
                 'stok_aktual' => 95,
                 'tanggal_kadaluarsa' => '2027-05-15',
                 'total_pemakaian_tahunan' => 840,
+                'lead_time' => 4,
             ],
             [
                 'kode_obat' => 'NB00000379',
@@ -50,21 +52,23 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Mukolitik',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 1567,
+                'harga_per_unit' => 8000,
                 'stok_aktual' => 85,
                 'tanggal_kadaluarsa' => '2026-11-20',
                 'total_pemakaian_tahunan' => 1080,
+                'lead_time' => 4,
             ],
             [
                 'kode_obat' => 'NB00000627',
-                'nama_obat' => 'ACRAN 50 mg/2 mL (Ranitidine)',
+                'nama_obat' => 'Ranitidine HCl 150 mg',
                 'kategori_obat' => 'Antiulkus',
-                'satuan' => 'Ampul',
+                'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Jarang',
-                'harga_per_unit' => 37607,
+                'harga_per_unit' => 4000,
                 'stok_aktual' => 30,
                 'tanggal_kadaluarsa' => '2026-08-10',
                 'total_pemakaian_tahunan' => 360,
+                'lead_time' => 5,
             ],
             [
                 'kode_obat' => 'NB00000380',
@@ -72,10 +76,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antivirus',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 2092,
+                'harga_per_unit' => 8000,
                 'stok_aktual' => 110,
                 'tanggal_kadaluarsa' => '2027-03-25',
                 'total_pemakaian_tahunan' => 1200,
+                'lead_time' => 5,
             ],
             [
                 'kode_obat' => 'NB00000381',
@@ -83,10 +88,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antivirus',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 2944,
+                'harga_per_unit' => 15000,
                 'stok_aktual' => 80,
                 'tanggal_kadaluarsa' => '2026-12-15',
                 'total_pemakaian_tahunan' => 720,
+                'lead_time' => 6,
             ],
             [
                 'kode_obat' => 'B00008032',
@@ -94,10 +100,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antivirus Topikal',
                 'satuan' => 'Tube',
                 'tingkat_pemakaian' => 'Jarang',
-                'harga_per_unit' => 3247,
+                'harga_per_unit' => 15000,
                 'stok_aktual' => 35,
                 'tanggal_kadaluarsa' => '2026-09-05',
                 'total_pemakaian_tahunan' => 180,
+                'lead_time' => 6,
             ],
             [
                 'kode_obat' => 'NB00000508',
@@ -105,10 +112,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antihipertensi',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 13924,
+                'harga_per_unit' => 95000,
                 'stok_aktual' => 90,
                 'tanggal_kadaluarsa' => '2027-01-18',
                 'total_pemakaian_tahunan' => 960,
+                'lead_time' => 3,
             ],
             [
                 'kode_obat' => 'NB0205202',
@@ -116,10 +124,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antelmintik',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Jarang',
-                'harga_per_unit' => 1540,
+                'harga_per_unit' => 8000,
                 'stok_aktual' => 70,
                 'tanggal_kadaluarsa' => '2026-10-12',
                 'total_pemakaian_tahunan' => 600,
+                'lead_time' => 4,
             ],
             [
                 'kode_obat' => 'NB00000728',
@@ -127,21 +136,23 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Suplemen',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 9713,
+                'harga_per_unit' => 20000,
                 'stok_aktual' => 75,
                 'tanggal_kadaluarsa' => '2027-04-30',
                 'total_pemakaian_tahunan' => 720,
+                'lead_time' => 5,
             ],
             [
                 'kode_obat' => 'NB00000174',
                 'nama_obat' => 'Alkohol Swab',
                 'kategori_obat' => 'Antiseptik',
-                'satuan' => 'Lembar',
+                'satuan' => 'Box',
                 'tingkat_pemakaian' => 'Sangat Sering',
-                'harga_per_unit' => 571000,
-                'stok_aktual' => 500,
+                'harga_per_unit' => 15000,
+                'stok_aktual' => 65,
                 'tanggal_kadaluarsa' => '2028-12-31',
                 'total_pemakaian_tahunan' => 7200,
+                'lead_time' => 3,
             ],
             [
                 'kode_obat' => 'NB00000509',
@@ -149,10 +160,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antihistamin',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 588000,
+                'harga_per_unit' => 25000,
                 'stok_aktual' => 60,
                 'tanggal_kadaluarsa' => '2027-02-14',
                 'total_pemakaian_tahunan' => 540,
+                'lead_time' => 4,
             ],
             [
                 'kode_obat' => 'NB00000382',
@@ -160,10 +172,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antihiperurisemia',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sangat Sering',
-                'harga_per_unit' => 1214,
+                'harga_per_unit' => 8000,
                 'stok_aktual' => 140,
                 'tanggal_kadaluarsa' => '2027-08-20',
                 'total_pemakaian_tahunan' => 1440,
+                'lead_time' => 5,
             ],
             [
                 'kode_obat' => 'NB00000383',
@@ -171,10 +184,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antihiperurisemia',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 1512,
+                'harga_per_unit' => 15000,
                 'stok_aktual' => 100,
                 'tanggal_kadaluarsa' => '2027-07-10',
                 'total_pemakaian_tahunan' => 960,
+                'lead_time' => 4,
             ],
             [
                 'kode_obat' => 'NB00000739',
@@ -182,10 +196,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Sedatif/Ansiolitik',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Jarang',
-                'harga_per_unit' => 1617,
+                'harga_per_unit' => 8000,
                 'stok_aktual' => 55,
                 'tanggal_kadaluarsa' => '2026-11-05',
                 'total_pemakaian_tahunan' => 480,
+                'lead_time' => 6,
             ],
             [
                 'kode_obat' => 'B00008033',
@@ -193,10 +208,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Mukolitik',
                 'satuan' => 'Strip',
                 'tingkat_pemakaian' => 'Sangat Sering',
-                'harga_per_unit' => 932000,
+                'harga_per_unit' => 4000,
                 'stok_aktual' => 180,
                 'tanggal_kadaluarsa' => '2027-09-15',
                 'total_pemakaian_tahunan' => 1920,
+                'lead_time' => 3,
             ],
             [
                 'kode_obat' => 'B00008035',
@@ -204,10 +220,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Mukolitik',
                 'satuan' => 'Botol',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 20979,
+                'harga_per_unit' => 15000,
                 'stok_aktual' => 40,
                 'tanggal_kadaluarsa' => '2026-12-20',
                 'total_pemakaian_tahunan' => 300,
+                'lead_time' => 5,
             ],
             [
                 'kode_obat' => 'NB00000003',
@@ -215,10 +232,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Mukolitik',
                 'satuan' => 'Botol',
                 'tingkat_pemakaian' => 'Sering',
-                'harga_per_unit' => 7770,
+                'harga_per_unit' => 8000,
                 'stok_aktual' => 35,
                 'tanggal_kadaluarsa' => '2026-10-28',
                 'total_pemakaian_tahunan' => 240,
+                'lead_time' => 4,
             ],
             [
                 'kode_obat' => 'NB00000628',
@@ -226,10 +244,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Antibiotik',
                 'satuan' => 'Ampul',
                 'tingkat_pemakaian' => 'Jarang',
-                'harga_per_unit' => 50400,
+                'harga_per_unit' => 15000,
                 'stok_aktual' => 25,
                 'tanggal_kadaluarsa' => '2026-07-15',
                 'total_pemakaian_tahunan' => 240,
+                'lead_time' => 6,
             ],
             [
                 'kode_obat' => 'NB00000630',
@@ -237,10 +256,11 @@ class MedicineSeeder extends Seeder
                 'kategori_obat' => 'Bronkodilator',
                 'satuan' => 'Ampul',
                 'tingkat_pemakaian' => 'Jarang',
-                'harga_per_unit' => 40404,
+                'harga_per_unit' => 10000,
                 'stok_aktual' => 20,
                 'tanggal_kadaluarsa' => '2026-08-30',
                 'total_pemakaian_tahunan' => 180,
+                'lead_time' => 5,
             ],
         ];
 
@@ -254,7 +274,8 @@ class MedicineSeeder extends Seeder
 
         foreach ($medicinesData as $data) {
             $annualTotal = $data['total_pemakaian_tahunan'];
-            unset($data['total_pemakaian_tahunan']);
+            $leadTime = $data['lead_time'];
+            unset($data['total_pemakaian_tahunan'], $data['lead_time']);
 
             // Create Medicine record
             $medicine = Medicine::create($data);
@@ -274,25 +295,18 @@ class MedicineSeeder extends Seeder
                 ]);
             }
 
-            // Ordering Cost S
-            $biayaPesan = match ($medicine->satuan) {
-                'Ampul', 'Vial' => 35000,
-                'Botol', 'Tube' => 25000,
-                default => 20000,
-            };
+            // Default Ordering Cost S = Rp 50.000
+            $biayaPesan = 50000;
 
-            // Holding Cost H (10% of unit price, minimum Rp 100)
-            $faktorBiayaSimpan = 0.10;
+            // Default Faktor Biaya Simpan = 20% (0.20)
+            $faktorBiayaSimpan = 0.20;
+            // Holding Cost H = Harga per Unit * 20%
             $biayaSimpan = max(round($medicine->harga_per_unit * $faktorBiayaSimpan, 2), 100);
 
-            // Lead Time LT (3 - 7 days)
-            $leadTime = match ($medicine->tingkat_pemakaian) {
-                'Sangat Sering' => 3,
-                'Sering' => 5,
-                default => 7,
-            };
+            // Service Level Z = 1.65
+            $serviceLevelZ = 1.65;
 
-            // Create EOQ Parameter with exact annual demand D
+            // Create EOQ Parameter
             $parameter = EoqParameter::create([
                 'medicine_id' => $medicine->id,
                 'rata_rata_permintaan' => $annualTotal,
@@ -300,7 +314,7 @@ class MedicineSeeder extends Seeder
                 'biaya_simpan' => $biayaSimpan,
                 'faktor_biaya_simpan' => $faktorBiayaSimpan,
                 'lead_time' => $leadTime,
-                'service_level_z' => 1.65,
+                'service_level_z' => $serviceLevelZ,
             ]);
 
             // Calculate EOQ & Min-Max
