@@ -329,3 +329,230 @@ Menyimpan hasil perhitungan sistem dari kuantitas optimal dan batas persediaan.
 - **Relasi:**
     - `belongsTo` ke `medicines`.
     - `belongsTo` ke `eoq_parameters`.
+
+---
+
+## 💻 Listing Kode Program Utama (Lampiran Paper Skripsi)
+
+Berikut adalah kumpulan potongan kode program utama (*core algorithm & business logic*) yang siap disalin untuk **Lampiran Kode Program** pada Penulisan Skripsi / Paper Ilmiah.
+
+### Lampiran 1: Service Perhitungan EOQ & Min-Max Stock (`app/Services/EoqCalculationService.php`)
+
+```php
+<?php
+
+namespace App\Services;
+
+use App\Models\Medicine;
+use App\Models\EoqParameter;
+use App\Models\EoqCalculation;
+
+class EoqCalculationService
+{
+    const WORKING_DAYS_PER_YEAR = 300;
+
+    /**
+     * Hitung EOQ, Safety Stock, ROP, Min, Max & Total Cost per Obat
+     */
+    public function calculate(Medicine $medicine, EoqParameter $parameter): EoqCalculation
+    {
+        $D  = $parameter->rata_rata_permintaan; // Permintaan tahunan
+        $S  = $parameter->biaya_pesan;           // Biaya pemesanan per order
+        $H  = $parameter->biaya_simpan;          // Biaya penyimpanan unit/tahun
+        $P  = $medicine->harga_per_unit;         // Harga per unit
+        $I  = $parameter->faktor_biaya_simpan;   // Faktor simpan (%)
+        $LT = $parameter->lead_time;           // Lead time (hari)
+        $Z  = $parameter->service_level_z;       // Service level Z (1.65)
+
+        if ($H <= 0 && $I > 0) {
+            $H = $I * $P;
+        }
+
+        // FASE 1: ECONOMIC ORDER QUANTITY (EOQ)
+        // EOQ* = sqrt((2 * D * S) / H)
+        $eoqValue = ($H > 0) ? sqrt((2 * $D * $S) / $H) : 0;
+        $frekuensi = ($eoqValue > 0) ? $D / $eoqValue : 0;
+        
+        // Total Cost: TC = (D/EOQ* * S) + (EOQ*/2 * H) + (D * P)
+        $totalCost = 0;
+        if ($eoqValue > 0) {
+            $totalCost = (($D / $eoqValue) * $S) + (($eoqValue / 2) * $H) + ($D * $P);
+        }
+
+        // FASE 2: MIN-MAX STOCK & SAFETY STOCK
+        $d = $D / self::WORKING_DAYS_PER_YEAR; // Permintaan harian
+        $safetyStock  = $Z * $d * sqrt($LT);    // SS = Z * d * sqrt(LT)
+        $reorderPoint = ($d * $LT) + $safetyStock; // ROP = (d * LT) + SS
+        $stokMinimum  = $safetyStock + ($d * $LT); // Min = SS + (d * LT)
+        $stokMaksimum = $stokMinimum + $eoqValue;  // Max = Min + EOQ*
+
+        // Evaluasi Status Stok Aktual
+        $stokAktual = $medicine->stok_aktual;
+        $status = 'normal';
+        if ($stokAktual <= $stokMinimum) {
+            $status = 'perlu_pesan';
+        } elseif ($stokAktual >= $stokMaksimum) {
+            $status = 'overstock';
+        }
+
+        return EoqCalculation::updateOrCreate(
+            [
+                'medicine_id' => $medicine->id,
+                'eoq_parameter_id' => $parameter->id,
+            ],
+            [
+                'eoq_value' => round($eoqValue, 2),
+                'frekuensi_pesan' => round($frekuensi, 2),
+                'total_cost' => round($totalCost, 2),
+                'safety_stock' => round($safetyStock, 2),
+                'reorder_point' => round($reorderPoint, 2),
+                'stok_minimum' => round($stokMinimum, 2),
+                'stok_maksimum' => round($stokMaksimum, 2),
+                'status' => $status,
+            ]
+        );
+    }
+}
+```
+
+### Lampiran 2: Service Analisis Prioritas Persediaan / ABC (`app/Services/AbcAnalysisService.php`)
+
+```php
+<?php
+
+namespace App\Services;
+
+use App\Models\Medicine;
+use Illuminate\Support\Collection;
+
+class AbcAnalysisService
+{
+    /**
+     * Klasifikasi ABC berdasarkan Nilai Pemakaian (Volume Pemakaian x Harga Unit)
+     */
+    public function analyze(): Collection
+    {
+        $medicines = Medicine::with('demandData')->get();
+
+        // 1. Hitung Nilai Pakai per obat
+        $analysisData = $medicines->map(function ($medicine) {
+            $totalPermintaan = $medicine->demandData->sum('jumlah_permintaan');
+            $nilaiPakai = $totalPermintaan * $medicine->harga_per_unit;
+
+            return [
+                'medicine' => $medicine,
+                'total_permintaan' => $totalPermintaan,
+                'harga_per_unit' => $medicine->harga_per_unit,
+                'nilai_pakai' => $nilaiPakai,
+            ];
+        });
+
+        // 2. Pengurutan Menurun (Descending)
+        $analysisData = $analysisData->sortByDesc('nilai_pakai')->values();
+        $totalNilaiPakai = $analysisData->sum('nilai_pakai');
+
+        if ($totalNilaiPakai == 0) return $analysisData;
+
+        // 3. Hitung Persentase Kumulatif & Klasifikasi Kategori A, B, C
+        $kumulatif = 0;
+        return $analysisData->map(function ($item) use ($totalNilaiPakai, &$kumulatif) {
+            $persentase = ($item['nilai_pakai'] / $totalNilaiPakai) * 100;
+            $kumulatif += $persentase;
+
+            if ($kumulatif <= 70) {
+                $kategori = 'A'; // High Value (0 - 70%)
+            } elseif ($kumulatif <= 90) {
+                $kategori = 'B'; // Medium Value (70 - 90%)
+            } else {
+                $kategori = 'C'; // Low Value (90 - 100%)
+            }
+
+            $item['persentase'] = round($persentase, 2);
+            $item['kumulatif'] = round($kumulatif, 2);
+            $item['kategori_abc'] = $kategori;
+
+            $item['medicine']->update(['kategori' => $kategori]);
+            return $item;
+        });
+    }
+}
+```
+
+### Lampiran 3: Pengurangan & Pengembalian Stok Otomatis (`app/Http/Controllers/DemandDataController.php`)
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\DemandData;
+use App\Models\Medicine;
+use Illuminate\Http\Request;
+
+class DemandDataController extends Controller
+{
+    /**
+     * Input transaksi pemakaian obat & otomatis kurangi stok aktual
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'medicine_id' => 'required|exists:medicines,id',
+            'periode' => 'required|string',
+            'jumlah_permintaan' => 'required|integer|min:1',
+        ]);
+
+        $medicine = Medicine::findOrFail($request->medicine_id);
+        DemandData::create($request->all());
+
+        // Otomatis kurangi stok aktual obat saat pemakaian dicatat oleh Instalasi Farmasi
+        if ($request->jumlah_permintaan > 0) {
+            $medicine->decrement('stok_aktual', $request->jumlah_permintaan);
+        }
+
+        return redirect()->route('demand-data.index')
+            ->with('success', "Pemakaian berhasil dicatat. Stok {$medicine->nama_obat} berkurang {$request->jumlah_permintaan}.");
+    }
+
+    /**
+     * Hapus transaksi pemakaian obat & otomatis kembalikan (rollback) stok
+     */
+    public function destroy(DemandData $demandDatum)
+    {
+        $medicine = $demandDatum->medicine;
+        if ($medicine && $demandDatum->jumlah_permintaan > 0) {
+            $medicine->increment('stok_aktual', $demandDatum->jumlah_permintaan);
+        }
+
+        $demandDatum->delete();
+        return redirect()->route('demand-data.index')
+            ->with('success', 'Data pemakaian dihapus dan stok obat dikembalikan.');
+    }
+}
+```
+
+### Lampiran 4: Otorisasi Hak Akses Berbasis Peran / RBAC (`app/Http/Middleware/RoleMiddleware.php`)
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class RoleMiddleware
+{
+    /**
+     * Membatasi rute aplikasi sesuai dengan peran hak akses (admin, instalasi_farmasi, kepala_instalasi)
+     */
+    public function handle(Request $request, Closure $next, ...$roles)
+    {
+        if (!$request->user() || !in_array($request->user()->role, $roles)) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki wewenang untuk mengakses halaman ini.');
+        }
+
+        return $next($request);
+    }
+}
+```

@@ -10,15 +10,17 @@
             box-sizing: border-box;
             font-family: 'DejaVu Sans', Arial, sans-serif;
             font-size: 9pt;
+            color: #000;
         }
 
         body {
             padding: 15mm 10mm;
+            background: #fff;
         }
 
         .header {
             text-align: center;
-            border-bottom: 3px double #333;
+            border-bottom: 2px solid #000;
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
@@ -26,26 +28,28 @@
         .header h2 {
             font-size: 14pt;
             margin-bottom: 2px;
+            font-weight: bold;
         }
 
         .header h3 {
             font-size: 11pt;
             font-weight: normal;
-            color: #444;
+            color: #222;
         }
 
         .header p {
-            font-size: 8pt;
-            color: #666;
+            font-size: 8.5pt;
+            color: #333;
         }
 
         .section-title {
-            background: #04aabe;
-            color: #fff;
-            padding: 5px 10px;
-            margin: 15px 0 8px;
+            background: transparent;
+            color: #000;
+            padding: 4px 0;
+            margin: 18px 0 8px;
             font-weight: bold;
             font-size: 10pt;
+            border-bottom: 1.5px solid #000;
         }
 
         table {
@@ -55,20 +59,24 @@
         }
 
         th, td {
-            border: 1px solid #ccc;
-            padding: 4px 6px;
+            border: 1px solid #666;
+            padding: 5px 6px;
             text-align: left;
+            background: #fff;
+            color: #000;
         }
 
         th {
-            background: #f1f5f9;
+            background: #fff;
             font-weight: bold;
             font-size: 8pt;
             text-transform: uppercase;
+            color: #000;
         }
 
         td {
             font-size: 8pt;
+            color: #000;
         }
 
         .text-right {
@@ -78,22 +86,6 @@
         .text-center {
             text-align: center;
         }
-
-        .badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: #fff;
-            font-size: 7pt;
-            font-weight: bold;
-        }
-
-        .badge-a { background: #dc2626; }
-        .badge-b { background: #d97706; }
-        .badge-c { background: #04aabe; }
-        .badge-normal { background: #04aabe; }
-        .badge-perlu_pesan { background: #dc2626; }
-        .badge-overstock { background: #d97706; }
 
         .footer {
             margin-top: 30px;
@@ -112,12 +104,13 @@
             padding-top: 60px;
             width: 50%;
             vertical-align: top;
+            background: transparent;
         }
 
         .signature-line {
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #000;
             display: inline-block;
-            width: 150px;
+            width: 160px;
             margin-bottom: 5px;
         }
 
@@ -158,9 +151,7 @@
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $calc->medicine->kode_obat }}</td>
                     <td>{{ $calc->medicine->nama_obat }}</td>
-                    <td class="text-center">
-                        <span class="badge badge-{{ strtolower($calc->medicine->kategori) }}">{{ $calc->medicine->kategori }}</span>
-                    </td>
+                    <td class="text-center">{{ $calc->medicine->kategori }}</td>
                     <td class="text-right">{{ number_format($calc->eoqParameter->rata_rata_permintaan, 0) }}</td>
                     <td class="text-right">{{ number_format($calc->eoqParameter->biaya_pesan, 0, ',', '.') }}</td>
                     <td class="text-right">{{ number_format($calc->eoqParameter->biaya_simpan, 0, ',', '.') }}</td>
@@ -198,9 +189,7 @@
                     <td class="text-right">{{ number_format($calc->stok_minimum, 0) }}</td>
                     <td class="text-right">{{ number_format($calc->stok_maksimum, 0) }}</td>
                     <td class="text-center">
-                        <span class="badge badge-{{ $calc->status }}">
-                            {{ $calc->status === 'perlu_pesan' ? 'Stok Kritis' : ($calc->status === 'overstock' ? 'Stok Berlebih' : 'Stok Aman') }}
-                        </span>
+                        {{ $calc->status === 'perlu_pesan' ? 'Stok Kritis' : ($calc->status === 'overstock' ? 'Stok Berlebih' : 'Stok Aman') }}
                     </td>
                 </tr>
             @endforeach
@@ -233,15 +222,13 @@
                     <td class="text-right">{{ number_format($item['nilai_pakai'], 0, ',', '.') }}</td>
                     <td class="text-right">{{ $item['persentase'] }}%</td>
                     <td class="text-right">{{ $item['kumulatif'] }}%</td>
-                    <td class="text-center">
-                        <span class="badge badge-{{ strtolower($item['kategori_abc']) }}">{{ $item['kategori_abc'] }}</span>
-                    </td>
+                    <td class="text-center">{{ $item['kategori_abc'] }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
-    <p style="margin-top: 5px; font-size: 8pt; color: #666;">
+    <p style="margin-top: 5px; font-size: 8pt; color: #444;">
         Kategori A: 0-70% (Prioritas Utama) | Kategori B: 70-90% (Prioritas Sedang) | Kategori C: 90-100% (Prioritas Pendukung)
     </p>
     @endif

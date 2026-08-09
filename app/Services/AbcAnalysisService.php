@@ -80,17 +80,17 @@ class AbcAnalysisService
             'A' => [
                 'count' => $medicines->where('kategori', 'A')->count(),
                 'percentage' => $total > 0 ? round(($medicines->where('kategori', 'A')->count() / $total) * 100, 1) : 0,
-                'description' => 'High Value — Kontrol ketat, pesan sering dalam jumlah kecil',
+                'description' => 'Nilai Persediaan Tinggi — Kontrol ketat, pemesanan terukur',
             ],
             'B' => [
                 'count' => $medicines->where('kategori', 'B')->count(),
                 'percentage' => $total > 0 ? round(($medicines->where('kategori', 'B')->count() / $total) * 100, 1) : 0,
-                'description' => 'Medium Value — Kontrol moderat',
+                'description' => 'Nilai Persediaan Sedang — Kontrol moderat',
             ],
             'C' => [
                 'count' => $medicines->where('kategori', 'C')->count(),
                 'percentage' => $total > 0 ? round(($medicines->where('kategori', 'C')->count() / $total) * 100, 1) : 0,
-                'description' => 'Low Value — Kontrol sederhana, pesan dalam jumlah besar',
+                'description' => 'Nilai Persediaan Rendah — Kontrol sederhana',
             ],
         ];
     }
